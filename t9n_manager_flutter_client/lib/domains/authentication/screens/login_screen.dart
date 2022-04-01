@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
+import '../widgets/login_form.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -10,17 +13,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return SingleChildScrollView(
-      scrollDirection:  Axis.vertical,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('data')
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).title),
       ),
+      body: LoginForm(),
     );
   }
 }

@@ -1,0 +1,23 @@
+{
+    "@@locale":"en",
+    "title": "t9n Manager",
+    "@title":{
+        "type":"text",
+        "context":"Everywhere",
+        "description":"Name of the application"
+    },
+
+    "common_button_ok":"Ok",
+
+    "login_screen_title": "Login",
+    "login_screen_subtitle":"Log in to your t9n Manager account",
+    "login_screen_validator_login":"Please type your login.",
+    "login_screen_textfieldlabel_login":"Enter your login",
+    "login_screen_validator_password":"Please type your password.",
+    "login_screen_textfieldlabel_password":"Type your password",
+    "login_screen_label_forgotpassword":"Forgot password?",
+    "login_screen_button_label_login":"Login",
+    "login_screen_label_noaccount":"Don't have an account? ",
+    "login_screen_label_signup":"Sign Up Here!"
+
+}
