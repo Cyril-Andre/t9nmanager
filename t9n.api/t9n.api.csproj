@@ -10,6 +10,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\arb\arb.csproj" />
+    <ProjectReference Include="..\Security\Security.csproj" />
+    <ProjectReference Include="..\t9n.DAL\t9n.DAL.csproj" />
+    <ProjectReference Include="..\userManagement\userManagement.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using t9n.api.jsonConverter;
+using t9n.DAL;
 
 namespace t9n.api
 {
@@ -27,8 +29,13 @@ namespace t9n.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //DbContext is define as a separate project
+            services.AddDbContext<t9nDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
-            services.AddControllers().AddJsonOptions(option=> option.JsonSerializerOptions.Converters.Add(new ArbResourceCollectionJsonConverter()))                ;
+            //ARB JSON format is not well structured. It requires a custom Seirializer/Deserializer
+            services.AddControllers().AddJsonOptions(option=> option.JsonSerializerOptions.Converters.Add(new ArbResourceCollectionJsonConverter()));
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "t9n.api", Version = "v1" });
