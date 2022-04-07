@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>t9n Manager - Email confirmation</title>
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto);
+        .logo {
+            background-image: url("data:image/svg+xml,%3Csvg width='210mm' height='297mm' viewBox='0 0 210 297' version='1.1' id='svg5' inkscape:version='1.1.2 (b8e25be8, 2022-02-05)' sodipodi:docname='logo.svg' xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape' xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd' xmlns='http://www.w3.org/2000/svg' xmlns:svg='http://www.w3.org/2000/svg'%3E%3Csodipodi:namedview id='namedview7' pagecolor='%23ffffff' bordercolor='%23666666' borderopacity='1.0' inkscape:pageshadow='2' inkscape:pageopacity='0.0' inkscape:pagecheckerboard='0' inkscape:document-units='mm' showgrid='false' inkscape:zoom='0.64052329' inkscape:cx='396.55076' inkscape:cy='579.99452' inkscape:window-width='1323' inkscape:window-height='969' inkscape:window-x='0' inkscape:window-y='38' inkscape:window-maximized='0' inkscape:current-layer='layer1' /%3E%3Cdefs id='defs2' /%3E%3Cg inkscape:label='Calque 1' inkscape:groupmode='layer' id='layer1'%3E%3Ctext xml:space='preserve' style='font-style:normal;font-weight:normal;font-size:50.8px;line-height:2.6;font-family:sans-serif;fill:%23000000;fill-opacity:1;stroke:none;stroke-width:0.264583' x='17.762171' y='45.851185' id='text759'%3E%3Ctspan sodipodi:role='line' id='tspan757' style='font-size:50.8px;stroke-width:0.264583' x='17.762171' y='45.851185'%3Et%3C/tspan%3E%3C/text%3E%3Ctext xml:space='preserve' style='font-style:normal;font-weight:normal;font-size:25.4px;line-height:1.25;font-family:sans-serif;fill:%23000000;fill-opacity:1;stroke:none;stroke-width:0.264583' x='22.719053' y='51.221127' id='text3549'%3E%3Ctspan sodipodi:role='line' id='tspan3547' style='font-size:25.4px;stroke-width:0.264583' x='22.719053' y='51.221127'%3E9%3C/tspan%3E%3C/text%3E%3Ctext xml:space='preserve' style='font-style:normal;font-weight:normal;font-size:50.8px;line-height:1.25;font-family:sans-serif;fill:%23000000;fill-opacity:1;stroke:none;stroke-width:0.264583' x='27.67594' y='70.222534' id='text8183'%3E%3Ctspan sodipodi:role='line' id='tspan8181' style='font-size:50.8px;stroke-width:0.264583' x='27.67594' y='70.222534'%3En%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position-x: center;
+            backdrop-filter: opacity(0.3);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        h1 {
+            font-weight: bolder;
+        }
+        body {
+            font-family: Roboto;
+            margin: auto;
+            padding: 0;
+            color: #3F50B5;
+        }
+
+        .button {
+            background-color: #002984;
+            color: #FFFFFF;
+            box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+            cursor: pointer;
+            vertical-align: middle;
+            max-width: 100px;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-family: Roboto;
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: inherit !important;
+        }
+
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        p {
+            line-height: inherit
+        }
+
+        @media (max-width:600px) {
+            .icons-inner {
+                text-align: center;
+            }
+
+            .icons-inner td {
+                margin: 0 auto;
+            }
+
+            .row-content {
+                width: 100% !important;
+            }
+
+            .column .border {
+                display: none;
+            }
+
+            table {
+                table-layout: fixed !important;
+            }
+
+            .stack .column {
+                width: 100%;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<table border="0" width="100%" >
+    <tr>
+        <td align="center">
+            <table width="600px">
+                <tbody>
+                <tr>
+                    <td class="icons-inner"><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABTCAYAAADdl1ROAAAACXBIWXMAAA9xAAAPcQHhK7ejAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAA1NJREFUeJzt2N+LVkUYwPGPri2tVFpKhuVSSYH0AyIqMoKIgsii7gqELkLopi4juggC6x+IiK4iqIsIvLeLgiIMCsoiItzMtB+mRmaLWrZoF/NKZ99m3nfO2Xd3Z5f5wsD7njPzzPM9c2bOnMP/eQvnIuWLSN1iWLnYCYyKKlIaVaQ0qkhpVJHSWDYixLcjoyzXLITEshmRKlIay0ZkFZ7qO/Yk7ojU/REvdejjtw5tRkJ9sVpMqkhpVJHSqCKlUUVKo4qUxrIRWdWx3QZsxhpM46CwOy6K1O53L3YIu+CzkfPf4jlcsvApx0mJnEoc7y+HcPtCJ93m1ppo/P4SH+E41uF+XN87twnv4058PYIcO5MakXP4HQ9F2qzAEzjZqDuF1QuQb5JBIncPafuI2fPnmflLcziD5kgOuxptDgijNe/EniOphGcyY77W+H01trRJqCsxkROJurkLwydmS9/VKqOOxET+TNSdwGRGzFP4rvH/prZJdSEmcmBA/Xsz4x5v/L40P53uxEQ+G1D/aXmTtzmqa1tl1JGYyJTZV7TJrXg2I25zPi3Is2QscXwStyXO3YeL8DlOR+I9Jnx2PS8whbczcrkKtwjbmxuwUdi3ncbfGe2j3Gj4nuos9gu34qc4jH8i9XYn+hjDg8Jz6/CAfmawBy9gfReZdzJkcsrHfXFXYnvvIrSNdaInNN5GZB32jUBkVyPmA/hqBDHfE27vbNbjgzl2+gouxKsjEGiWPbigjcy48MJ0pGOHbxjNKMTKzvNJttnQTQi723uwFVfist65v4Sr3pVp/IAzuBiXy3v+zAgr3Zzfe1YI9+oa7a/m93gZN4tf0C14XngHGhTn9blKNGkjshfbEsnH2CAs76l400b4neDaDIGf8bhun6A24tiA2A/nBtomXPV+JuUN/7vCcj4XXhwQf2e62Wy+EbYJ+/ChsPQdHJJ8606GsHlAH7vbfEUZx3W90oZDLeun2I+jworWz6bc+/WPxPGf8CYebZ9XJ1LL7NrcEdmKK4QVZEyYeEf9tyuNzZ/54JfE8WwR+LVXFpMjieOrl9rX+JOpE0tNJPmCtdREzqROLDWRJFWkNKpIaVSR0qgipVFFSqOKlEYVKY0qUhpVpDSqSGn8C6ApqeHl/TnbAAAAAElFTkSuQmCC'/></td>
+                    <td>
+                        <h1>t9n Manager</h1></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>Thank you for subscribing to t9n Manager. In order to finalize your account creation, please click on the link below (or copy the url in your favorite browser)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <div>
+                            <!--[if mso]>
+                                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${#url}" style="height:80px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#002984">
+                                <w:anchorlock/>
+                                <center>
+                            <![endif]-->
+                            <a href="${#url}"
+                               style="background-color:#002984;border-radius:8px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:100px;-webkit-text-size-adjust:none;">Confirm</a>
+                            <!--[if mso]>
+                                </center>
+                                </v:roundrect>
+                            <![endif]-->
+                        </div>
+<!--                        <a class="button" href="${#url}">Confirm</a> <br /><br /> -->
+                        <a style="text-decoration: none" href="${#url}">${#url}</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
