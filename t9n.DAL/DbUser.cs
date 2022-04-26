@@ -17,6 +17,7 @@ namespace t9n.DAL
         public string UserName { get; set; }
         public string UserEmail { get; set; }
         public string UserPasswordHash { get; set; }
+        public bool UserEmailValidated { get; set; }
         public DateTime UserBirthdate { get; set; }
         public string Salt { get; set; }
     }

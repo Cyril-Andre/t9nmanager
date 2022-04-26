@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using t9n.DAL;
 
 namespace t9n.DAL.Migrations
 {
     [DbContext(typeof(t9nDbContext))]
-    partial class t9nDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220407084321_20220407.1_AddUserEmailValidation")]
+    partial class _202204071_AddUserEmailValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
