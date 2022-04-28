@@ -10,6 +10,8 @@ import '../../../shared/widgets/screen_title.dart';
 import '../../../shared/widgets/spacer.dart';
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
