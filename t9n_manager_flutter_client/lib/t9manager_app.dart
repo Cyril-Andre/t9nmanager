@@ -9,6 +9,7 @@ import 'domains/authentication/screens/signup_screen.dart';
 import 'generated/l10n.dart';
 import 'shared/app_state_notifier.dart';
 
+// ignore: camel_case_types
 class t9nManagerApp extends StatelessWidget {
   const t9nManagerApp({Key? key}) : super(key: key);
 

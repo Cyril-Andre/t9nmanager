@@ -4,7 +4,6 @@ import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../app_settings.dart';
 import '../app_state_notifier.dart';
 
 class Datefield extends StatefulWidget {
@@ -18,11 +17,9 @@ class _DatefieldState extends State<Datefield> {
   TextEditingController txtBirthdate = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    AppSettings appSettings = context.watch<AppSettings>();
     double width = MediaQuery.of(context).size.width>context.watch<AppState>().screenMaxSize
                                                       ? context.watch<AppState>().screenMaxSize
                                                       : MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
       alignment: Alignment.center,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

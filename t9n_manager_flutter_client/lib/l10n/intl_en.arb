@@ -35,5 +35,22 @@
     "signup_form_label_already_account":"Already registered?",
     "signup_form_label_login":"Login here!",
     "signup_form_msg_signup_succeeded_title":"Signed in!",
-    "signup_form_msg_signup_failed_title":"Signup failed!"
+    "signup_form_msg_signup_failed_title":"Signup failed!",
+
+    "forgot_password_form_title":"Reinitialize password",
+    "forgot_password_form_subtitle":"Forgot your password? Reinitialize it!",
+    "forgot_password_form_textfieldlabel_email":"Enter your email",
+    "forgot_password_form_validator_email":"Please type your email.",
+    "forgot_password_form_msg_check_email_title":"Password reinitialization process started",
+    "forgot_password_form_msg_check_email_message":"Please type and confirm your password, check you email and enter the OTP code",
+    "forgot_password_form_msg_password_reset_success_title":"Password reset successfuly",
+    "forgot_password_form_msg_password_reset_success_message":"Your password has been reset. You can login",
+    "forgot_password_form_msg_fail_title":"Something went wrong!",
+    "forgot_password_form_msg_password_reset_fail_title":"Password reset failed",
+    "forgot_password_form_button_label_otp":"Ask OTP code",
+    "forgot_password_form_button_label_reset":"Reset password",
+    "forgot_password_form_label_remember":"I think I remember my password",
+    "forgot_password_form_label_login":"Give it a try!",
+    "signup_form_validator_otp":"Please check your emails and enter OTP code we sent you.",
+    "signup_form_textfieldlabel_otp":"Enter OTP code"
 }

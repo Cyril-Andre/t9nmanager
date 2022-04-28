@@ -21,7 +21,7 @@ void main({String? env}) async {
   if (env == null || env == "dev") {
     HttpOverrides.global = MyHttpOverrides(); // To be removed in Prod
   }
-  var uuid = Uuid();
+  var uuid = const Uuid();
   var xCorrelationId = uuid.v4();
   final appSettings = await AppSettings.forEnvironment(env, xCorrelationId);
   runApp(

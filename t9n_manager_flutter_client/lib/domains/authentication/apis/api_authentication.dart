@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:t9n_manager_flutter_client/domains/authentication/models/user_reinit_password_model.dart';
 import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
-import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
 
 import '../../../shared/models/api_message.dart';
 import '../models/user_login_model.dart';
@@ -40,6 +40,36 @@ Future<ApiMessage> postLogin(
   } catch (ex) {
     rethrow;
   }
+}
+
+Future<ApiMessage> postResetPassword1(UserResetPasswordModel userResetPasswordModel,
+    AppSettings appSettings) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'X-Correlation-Id': appSettings.xCorrelationId ?? ''
+  };
+  var body = jsonEncode(userResetPasswordModel.toJson());
+  var result = http
+      .post(Uri.parse("${appSettings.apiUrl}user/startresetpassword"),
+          headers: headers, body: body)
+      .then(onValue)
+      .catchError(onError);
+  return result;
+}
+
+Future<ApiMessage> postResetPassword2(UserResetPasswordModel userResetPasswordModel,
+    AppSettings appSettings) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'X-Correlation-Id': appSettings.xCorrelationId ?? ''
+  };
+  var body = jsonEncode(userResetPasswordModel.toJson());
+  var result = http
+      .post(Uri.parse("${appSettings.apiUrl}user/finalizeresetpassword"),
+          headers: headers, body: body)
+      .then(onValue)
+      .catchError(onError);
+  return result;
 }
 
 Future<ApiMessage> onValue(http.Response response) async {
