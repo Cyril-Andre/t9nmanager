@@ -1,5 +1,7 @@
 {
     "@@locale":"en",
+    "@@context":"t9n Manager",
+
     "title": "t9n Manager",
     "@title":{
         "type":"text",
@@ -8,6 +10,19 @@
     },
 
     "common_button_ok":"Ok",
+
+    "menu_tenants":"Tenants",
+    "@menu_tenants":{
+        "type":"text",
+        "context":"Main menu - Home page",
+        "description":"Menu card to access Tenants feature"
+    },
+    "menu_projects":"Projects",
+    "@menu_projects":{
+        "type":"text",
+        "context":"Main menu - Home page",
+        "description":"Menu card to access Tenants feature"
+    },
 
     "login_form_title": "Login",
     "login_form_subtitle":"Log in to your t9n Manager account",
