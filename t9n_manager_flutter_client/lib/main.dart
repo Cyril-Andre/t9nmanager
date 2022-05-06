@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:t9n_manager_flutter_client/domains/authentication/screens/login_screen.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:uuid/uuid.dart';
 
-import 'domains/authentication/screens/forgot_password_screen.dart';
-import 'domains/authentication/screens/home_screen.dart';
-import 'domains/authentication/screens/signup_screen.dart';
-import 'generated/l10n.dart';
+import 'shared/app_state_notifier.dart';
+import 't9manager_app.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -19,62 +17,17 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
-  HttpOverrides.global = MyHttpOverrides(); // To be removed in Prod
-  runApp(ChangeNotifierProvider(
-      create: (_) => AppState(), child: const t9nManagerApp()));
-
-  //runApp(const MyApp());
-}
-
-class t9nManagerApp extends StatelessWidget {
-  const t9nManagerApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-          localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-
-      title: 't9n Manager',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-           routes: {
-        '/':(context)=> context.watch<AppState>().isLoggedIn?const HomeScreen():const LoginScreen(),
-        '/signup':(context)=> const SignUpScreen(),
-        '/forgotpassword':(context)=> const ForgotPasswordScreen(),
-      },
-      initialRoute: "/",
-    );
+void main({String? env}) async {
+  if (env == null || env == "dev") {
+    HttpOverrides.global = MyHttpOverrides(); // To be removed in Prod
   }
+  var uuid = const Uuid();
+  var xCorrelationId = uuid.v4();
+  final appSettings = await AppSettings.forEnvironment(env, xCorrelationId);
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => AppState()),
+      ChangeNotifierProvider(create: (_) => appSettings),
+    ], child: const t9nManagerApp()),
+  );
 }
-
-class AppState with ChangeNotifier {
-//Constant
-  double ScreenMaxSize = 600;
-
-  bool isLoggedIn = false;
-
-  void toggleLogedIn() {
-    isLoggedIn = !isLoggedIn;
-    notifyListeners();
-  }
-}
-
-
