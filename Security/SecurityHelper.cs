@@ -3,6 +3,24 @@ using System.Linq;
 using System.Security.Cryptography;
 namespace Security
 {
+
+    public static class OtpProvider {
+        public static string GenerateOtp(int numberDigits,bool numericOnly = true)
+        {
+            string otp = "";
+            string[] digits;
+            if (numericOnly) digits = new string[] { "0", "1","2","3","4","5","6","7","8","9" };
+            else digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            Random rand = new Random();
+            for (int counter=0; counter<numberDigits; counter++)
+            {
+                var alea = rand.Next(0, digits.Length - 1);
+                otp += digits[alea];
+            }
+            return otp;
+        }
+    }
+
     /// <summary>
     /// Salted password hashing with PBKDF2-SHA1.
     /// Compatibility: .NET 3.0 and later.
