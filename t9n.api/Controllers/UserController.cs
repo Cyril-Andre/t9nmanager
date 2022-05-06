@@ -12,6 +12,7 @@ using t9n.api.model;
 using t9n.api.model.extension;
 using t9n.DAL;
 using userManagement;
+using Security;
 
 namespace t9n.api.Controllers
 {
@@ -89,12 +90,77 @@ namespace t9n.api.Controllers
         [HttpGet("confirm")]
         public IActionResult ConfirmationEmail(string o)
         {
-            Guid reference = Guid.Parse(o);
-            var user = _context.Users.FirstOrDefault(u => u.UserInternalId == reference);
-            if (user == null) return NotFound(new ApiMessage(httpStatus: 404, message: "User unknown."));
-            user.UserEmailValidated = true;
-            _context.SaveChanges();
-            return Ok(new ApiMessage(httpStatus: 200, message: "Account activated."));
+            try
+            {
+                Guid reference = Guid.Parse(o);
+                var user = _context.Users.FirstOrDefault(u => u.UserInternalId == reference);
+                if (user == null) return NotFound(new ApiMessage(httpStatus: 404, message: "User unknown."));
+                user.UserEmailValidated = true;
+                _context.SaveChanges();
+                return Ok(new ApiMessage(httpStatus: 200, message: "Account activated."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiMessage(httpStatus: 500, message: "User cannot ne activated", moreInfo: $"{ex.Message}"));
+            }
+        }
+    
+    
+        [HttpPost("startresetpassword")]
+        public IActionResult StartResetPassword(UserResetPasswordModel userResetPasswordModel)
+        {
+            try
+            {
+                if (userResetPasswordModel == null || String.IsNullOrEmpty(userResetPasswordModel.UserEmail))
+                    return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid"));
+                var user = _context.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                if (user == null)
+                {
+                    return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
+                }
+                string otp = OtpProvider.GenerateOtp(6, true);
+                user.ResetPasswordOtp = otp;
+                _context.SaveChanges();
+                CommunicationHelper.SendResetPasswordMail(user.UserEmail,user.UserName, otp, _appSettings.Value.TemplatesPath, "en");
+                return Ok(new ApiMessage(httpStatus: 200, message: $"Reset password OTP sent"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiMessage(httpStatus: 500, message: "User cannot reset password", moreInfo: $"{ex.Message}"));
+            }
+
+        }
+
+
+        [HttpPost("finalizeresetpassword")]
+        public IActionResult FinalizeResetPassword(UserResetPasswordModel userResetPasswordModel)
+        {
+            try
+            {
+                if (userResetPasswordModel == null || String.IsNullOrEmpty(userResetPasswordModel.UserEmail))
+                    return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid"));
+                if (!userResetPasswordModel.Validate(out var reason))
+                {
+                    return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid",moreInfo:reason));
+                }
+                var user = _context.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                if (user == null)
+                {
+                    return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
+                }
+                if (!string.Equals(userResetPasswordModel.Otp, user.ResetPasswordOtp, StringComparison.Ordinal))
+                {
+                    return Unauthorized(new ApiMessage(httpStatus: 401, message: $"User password cannot be reintialized"));
+                }
+                var dbUser = userResetPasswordModel.ToDatabase(_context);
+                _context.SaveChanges();
+                return Ok(new ApiMessage(httpStatus: 200, message: $"Password reset"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiMessage(httpStatus: 500, message: "Password cannot be reset", moreInfo: $"{ex.Message}"));
+            }
+
         }
     }
 }
