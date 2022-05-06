@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
+import '../widgets/forgot_password_form.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({ Key? key }) : super(key: key);
 
@@ -10,8 +13,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('ForgotPasswordScreen'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).title),
+      ),
+      body: const ForgotPasswordForm(),
     );
   }
 }

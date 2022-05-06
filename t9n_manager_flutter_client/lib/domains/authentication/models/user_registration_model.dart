@@ -1,16 +1,17 @@
-
 import 'package:intl/intl.dart';
 
-class User {
+class UserRegistrationModel {
   String userName = '';
   String userEmail = '';
   String userPassword = '';
-  DateTime userBirthdate = DateTime(DateTime.now().year - 13, DateTime.now().month, DateTime.now().day);
+  DateTime userBirthdate = DateTime(
+      DateTime.now().year - 13, DateTime.now().month, DateTime.now().day);
 
-  User(this.userName, this.userEmail, this.userBirthdate, this.userPassword);
+  UserRegistrationModel(
+      this.userName, this.userEmail, this.userBirthdate, this.userPassword);
 
-  factory User.fromJson(Map<String,dynamic> json){
-    return User(
+  factory UserRegistrationModel.fromJson(Map<String,dynamic> json){
+    return UserRegistrationModel(
       json['userName']??'', 
       json['userEmail']??'', 
       json['userBirthdate']??'', 
@@ -26,4 +27,3 @@ class User {
     };
   }
 }
-

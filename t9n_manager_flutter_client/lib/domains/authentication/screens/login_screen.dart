@@ -17,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text(S.of(context).title),
       ),
-      body: LoginForm(),
+      body: const LoginForm(),
     );
   }
 }
