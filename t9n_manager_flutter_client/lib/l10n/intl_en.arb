@@ -68,4 +68,5 @@
     "forgot_password_form_label_login":"Give it a try!",
     "signup_form_validator_otp":"Please check your emails and enter OTP code we sent you.",
     "signup_form_textfieldlabel_otp":"Enter OTP code"
+
 }
