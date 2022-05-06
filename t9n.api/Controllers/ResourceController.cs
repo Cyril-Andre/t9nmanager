@@ -30,7 +30,7 @@ namespace t9n.api.Controllers
         /// </summary>
         /// <param name="domain">name of the domain of the expected resources</param>
         [ProducesResponseType(typeof(ArbResourceCollection),200)]
-        public async Task<IActionResult> GetAllResources(string domain)
+        public IActionResult GetAllResources(string domain)
         {
             ArbResourceCollection result = new ArbResourceCollection
             {
