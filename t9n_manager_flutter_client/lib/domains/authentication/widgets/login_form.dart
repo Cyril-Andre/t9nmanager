@@ -25,10 +25,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     AppSettings appSettings = context.watch<AppSettings>();
-    double width = MediaQuery.of(context).size.width >
-            context.watch<AppState>().screenMaxSize
-        ? context.watch<AppState>().screenMaxSize
-        : MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width > context.watch<AppState>().screenMaxSize ? context.watch<AppState>().screenMaxSize : MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Center(
       child: SizedBox(
@@ -46,8 +43,7 @@ class _LoginFormState extends State<LoginForm> {
                 ScreenTitle(S.of(context).login_form_title),
                 Text(
                   S.of(context).login_form_subtitle,
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.normal),
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 verticalSpaceTiny,
                 TextFormField(
@@ -71,17 +67,14 @@ class _LoginFormState extends State<LoginForm> {
                   },
                   controller: txtPassword,
                   decoration: InputDecoration(
-                      label: Text(
-                          S.of(context).login_form_textfieldlabel_password),
+                      label: Text(S.of(context).login_form_textfieldlabel_password),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
                             _showPassword = !_showPassword;
                           });
                         },
-                        icon: Icon(_showPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon: Icon(_showPassword ? Icons.visibility_off : Icons.visibility),
                       )),
                   obscureText: !_showPassword,
                 ),
@@ -91,8 +84,7 @@ class _LoginFormState extends State<LoginForm> {
                   child: InkWell(
                     child: Text(
                       S.of(context).login_form_label_forgotpassword,
-                      style:
-                          const TextStyle(decoration: TextDecoration.underline),
+                      style: const TextStyle(decoration: TextDecoration.underline),
                     ),
                     onTap: () {
                       Navigator.popAndPushNamed(context, '/forgotpassword');
@@ -103,16 +95,13 @@ class _LoginFormState extends State<LoginForm> {
                 ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        UserLoginModel userLoginModel =
-                            UserLoginModel(txtLogin.text, txtPassword.text);
+                        UserLoginModel userLoginModel = UserLoginModel(txtLogin.text, txtPassword.text);
                         postLogin(userLoginModel, appSettings).then((value) {
                           if (value.httpStatus == 200) {
+                            context.read<AppState>().setToken(value.message);
                             context.read<AppState>().toggleLogedIn();
                           } else {
-                            alert(
-                                S.of(context).login_form_msg_login_failed_title,
-                                value.message+"-"+value.moreInfo,
-                                S.of(context).common_button_ok);
+                            alert(S.of(context).login_form_msg_login_failed_title, value.message + "-" + value.moreInfo, S.of(context).common_button_ok);
                           }
                         });
                       }
@@ -121,9 +110,7 @@ class _LoginFormState extends State<LoginForm> {
                 verticalSpaceSmall,
                 Text(S.of(context).login_form_label_noaccount),
                 InkWell(
-                  child: Text(S.of(context).login_form_label_signup,
-                      style: const TextStyle(
-                          decoration: TextDecoration.underline)),
+                  child: Text(S.of(context).login_form_label_signup, style: const TextStyle(decoration: TextDecoration.underline)),
                   onTap: () {
                     Navigator.popAndPushNamed(context, "/signup");
                   },
@@ -137,18 +124,12 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   alert(String title, String message, String buttonLabel) {
-    showDialog<String>(context: context, builder: (BuildContext context)=>
-    AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: Text(title),
-      content:Text(message),
-      actions:<Widget>[
-        TextButton(
-          onPressed:()=> Navigator.pop(context,buttonLabel), 
-          child: Text(buttonLabel)
-        )
-      ]
-    )
-    );
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[TextButton(onPressed: () => Navigator.pop(context, buttonLabel), child: Text(buttonLabel))]));
   }
 }
