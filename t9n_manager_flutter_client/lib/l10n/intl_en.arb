@@ -67,6 +67,15 @@
     "forgot_password_form_label_remember":"I think I remember my password",
     "forgot_password_form_label_login":"Give it a try!",
     "signup_form_validator_otp":"Please check your emails and enter OTP code we sent you.",
-    "signup_form_textfieldlabel_otp":"Enter OTP code"
+    "signup_form_textfieldlabel_otp":"Enter OTP code",
+
+    "tenant_add_button":"Add new tenant",
+
+    "exception_message_userunknown":"Sorry, we cannot find you as a user.",
+    "exception_message_wrongtoken":"Authorization token invalid.",
+    "exception_message_unexpected":"An unexpected error occured.",
+    "exception_message_timeout":"Server became unreachable. Please try again.",
+
+    "api_error_title":"An error occured"
 
 }
