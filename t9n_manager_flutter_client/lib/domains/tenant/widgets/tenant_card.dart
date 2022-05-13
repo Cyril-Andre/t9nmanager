@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../../shared/app_state_notifier.dart';
 import '../models/tenant.dart';
 
 class TenantCard extends StatefulWidget {
-  const TenantCard(this.tenant, this.addNew);
+  const TenantCard({Key? key, this.tenant, required this.addNew}) : super(key: key);
   final Tenant? tenant;
   final bool addNew;
 
