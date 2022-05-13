@@ -47,9 +47,9 @@ class _TenantScreenState extends State<TenantScreen> {
     try {
       List<Widget> listTenantCards = <Widget>[];
       for (var counter = 0; counter < tenants.length; counter++) {
-        listTenantCards.add(TenantCard(tenants[counter], false));
+        listTenantCards.add(TenantCard(tenant:tenants[counter], addNew:false));
       }
-      listTenantCards.add(TenantCard(Tenant("_", S.of(context).tenant_add_button), true));
+      listTenantCards.add(TenantCard(tenant:Tenant("_", S.of(context).tenant_add_button),addNew: true));
       return Row(
         children: listTenantCards,
       );

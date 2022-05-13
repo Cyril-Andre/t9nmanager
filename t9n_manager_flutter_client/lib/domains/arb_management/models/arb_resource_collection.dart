@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class ArbResourceCollection {
 /*
@@ -39,23 +38,23 @@ class ArbResourceCollection {
     Iterable<String> _ids = json.keys.where((element) => element.substring(0, 1) != "@");
     List<ArbResourceEntry> _entries = [];
     for (var element in _ids) {
-      String _entry_id = element;
-      String _entry_value = json[element];
+      String entryId = element;
+      String entryValue = json[element];
       var meta = json['@' + element];
-      String? _type;
-      String? _context;
-      String? _description;
-      String? _source_text;
-      String? _screen;
+      String? type;
+      String? context;
+      String? description;
+      String? sourceText;
+      String? screen;
 
       if (meta != null) {
-        _type = meta['type'];
-        _context = meta['context'];
-        _description = meta['description'];
-        _source_text = meta['source_text'];
-        _screen = meta['screen'];
+        type = meta['type'];
+        context = meta['context'];
+        description = meta['description'];
+        sourceText = meta['source_text'];
+        screen = meta['screen'];
       }
-      var entry = ArbResourceEntry(_entry_id, _entry_value, _type, _context, _description, _source_text, _screen);
+      var entry = ArbResourceEntry(entryId, entryValue, type, context, description, sourceText, screen);
       _entries.add(entry);
     }
     return ArbResourceCollection(_locale, _context, _entries);
@@ -90,6 +89,7 @@ class ArbResourceEntry {
   String? type;
   String? context;
   String? description;
+  // ignore: non_constant_identifier_names
   String? source_text;
   String? screen;
 
