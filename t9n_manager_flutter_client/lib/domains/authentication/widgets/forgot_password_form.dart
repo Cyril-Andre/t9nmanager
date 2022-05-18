@@ -199,7 +199,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                                               appSettings)
                                           .then((value) async {
                                         if (value.httpStatus == 200) {
-                                          var res = await alert(
+                                          await alert(
                                                   S
                                                       .of(context)
                                                       .forgot_password_form_msg_password_reset_success_title,
