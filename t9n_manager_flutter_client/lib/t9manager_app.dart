@@ -42,6 +42,7 @@ class t9nManagerApp extends StatelessWidget {
         '/': (context) => context.watch<AppState>().isLoggedIn
             ? const HomeScreen()
             : const LoginScreen(),
+        '/relog': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotpassword': (context) => const ForgotPasswordScreen(),
         '/tenant':(context) => const TenantScreen(),

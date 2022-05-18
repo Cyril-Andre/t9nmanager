@@ -2,7 +2,7 @@ class ApiMessage {
   int httpStatus = 200;
   String message = "";
   String moreInfo = "";
-
+  
   ApiMessage(this.httpStatus, this.message, this.moreInfo);
 
   factory ApiMessage.fromJson(Map<String, dynamic> json) {

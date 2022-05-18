@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
 import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
-import 'dart:convert';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_settings.dart';
 import '../../../shared/models/api_message.dart';
@@ -11,7 +11,7 @@ import '../models/tenant.dart';
 Future<List<Tenant>> getAllTenants(AppSettings appSettings, String jwt, BuildContext context) async {
   try {
     //Map<String, String> headers = {'Content-Type': 'application/json', 'X-Correlation-Id': appSettings.xCorrelationId ?? '', 'authorization': 'Bearer $jwt'};
-    var dio = Dio();
+    Dio dio = Dio();
     dio.options.sendTimeout = 2000;
     dio.options.receiveTimeout = 2000;
     dio.options.headers['content-type'] = 'application/json';
@@ -22,27 +22,45 @@ Future<List<Tenant>> getAllTenants(AppSettings appSettings, String jwt, BuildCon
     return tenants;
   } on DioError catch (e) {
     if (e.response?.statusCode == 404) {
-      throw ApiException(S.of(context).exception_message_userunknown);
+      throw ApiException(404, S.of(context).exception_message_userunknown);
     } else if (e.response?.statusCode == 400) {
-      throw ApiException(S.of(context).exception_message_wrongtoken);
-    } 
-    else if (e.type==DioErrorType.connectTimeout || e.type==DioErrorType.receiveTimeout || e.type==DioErrorType.sendTimeout){
-      throw ApiException(S.of(context).exception_message_timeout);
-    }
-    else {
-      throw ApiException(S.of(context).exception_message_unexpected);
+      throw ApiException(400, S.of(context).exception_message_wrongtoken);
+    } else if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout || e.type == DioErrorType.sendTimeout) {
+      throw ApiException(408, S.of(context).exception_message_timeout);
+    } else if (e.response?.statusCode == 401) {
+      throw ApiException(401, S.of(context).exception_message_notauthoraized);
+    } else {
+      throw ApiException(500, S.of(context).exception_message_unexpected);
     }
   }
 }
 
-Future<ApiMessage> onValue(http.Response response) async {
-  final responseData = response.body;
-  var apiMessage = ApiMessage.fromJson(jsonDecode(responseData));
-  return apiMessage;
-}
-
-Future<ApiMessage> onError(error) async {
-  final responseData = error.message;
-  var apiMessage = ApiMessage(0, 'Client error', responseData);
-  return apiMessage;
+Future<List<Tenant>> deleteTenant(BuildContext context, Tenant tenant) async {
+  var xCorrelationId = context.watch<AppSettings>().xCorrelationId;
+  var jwt = context.watch<AppState>().jwt;
+  var apiUrl = context.watch<AppSettings>().apiUrl;
+  try {
+    Dio dio = Dio();
+    dio.options.sendTimeout = 2000;
+    dio.options.receiveTimeout = 2000;
+    dio.options.headers['content-type'] = 'application/json';
+    dio.options.headers['X-Correlation-Id'] = xCorrelationId ?? '';
+    dio.options.headers['authorization'] = 'Bearer $jwt';
+    var response = await dio.delete("${apiUrl}tenant/${tenant.tenantKey}");
+    //ApiMessage(sage, moreInfo)
+    final List<Tenant> tenants = (response.data as List).map((e) => Tenant.fromJson(e as Map<String, dynamic>)).toList();
+    return tenants;
+  } on DioError catch (e) {
+    if (e.response?.statusCode == 404) {
+      throw ApiException(404, S.of(context).exception_message_tenantunknown);
+    } else if (e.response?.statusCode == 400) {
+      throw ApiException(400, S.of(context).exception_message_wrongtoken);
+    } else if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout || e.type == DioErrorType.sendTimeout) {
+      throw ApiException(408, S.of(context).exception_message_timeout);
+    } else if (e.response?.statusCode == 401) {
+      throw ApiException(401, S.of(context).exception_message_notauthoraized);
+    } else {
+      throw ApiException(500, S.of(context).exception_message_unexpected);
+    }
+  }
 }

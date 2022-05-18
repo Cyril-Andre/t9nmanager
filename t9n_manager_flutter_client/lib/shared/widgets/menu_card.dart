@@ -11,20 +11,22 @@ class MenuCard extends StatelessWidget {
     return SizedBox(
         width: cardSize,
         height: cardSize,
-        child: Card(
-          child: Align(
-            alignment: Alignment.center,
-            child: ListTile(
-                title: Text(title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12,)
-                ),
-                onTap: onPressed??onPressed,
+        child: GestureDetector(
+          onTap: onPressed??onPressed,
+          child: Card(
+            child: Align(
+              alignment: Alignment.center,
+              child: ListTile(
+                  title: Text(title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14,)
+                  ),
+              ),
             ),
+            elevation: 8,
+            shadowColor: Colors.black87,
+            margin: const EdgeInsets.all(10),
           ),
-          elevation: 8,
-          shadowColor: Colors.black87,
-          margin: const EdgeInsets.all(10),
         )
     );
   }
