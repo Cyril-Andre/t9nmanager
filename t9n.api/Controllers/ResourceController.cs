@@ -1,4 +1,5 @@
 ﻿using arb;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using t9n.api.jsonConverter;
 
 namespace t9n.api.Controllers
 {
+    [Authorize]
     [Route("api/resource")]
     [ApiController]
     public class ResourceController : ControllerBase

@@ -15,16 +15,16 @@ namespace t9n.api.Helpers
             var certStore = new X509Store("My");
             certStore.Open(OpenFlags.ReadOnly);
 
-            var cert = certStore.Certificates.Find(X509FindType.FindBySerialNumber, "418F0A50E3FB2C804FBF41F6BC82EE67", true).FirstOrDefault();// new X509Certificate2(appSettings.CertFullPath);
+            var cert = certStore.Certificates.Find(X509FindType.FindBySerialNumber, appSettings.CertSerialNumber, true).FirstOrDefault();// new X509Certificate2(appSettings.CertFullPath);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,user.UserName),
-                    new Claim(ClaimTypes.Email,user.UserEmail),
-                    new Claim("Tenants",string.Join(",",user.UserTenants.Select(x=>x.TenantKey).ToList()))
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.UserEmail),
+                    new Claim("Tenants", string.Join(",", user.UserTenants.Select(x => x.TenantKey).ToList()))
                 }),
                 Issuer = "t9nManager",
                 Expires = DateTime.Now.AddHours(8),
@@ -33,6 +33,65 @@ namespace t9n.api.Helpers
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             string jwt = tokenHandler.WriteToken(token);
             return jwt;
+        }
+
+        static public TokenValidationParameters TokenValidationParameters(AppSettings appSettings)
+        {
+            var certStore = new X509Store("My");
+            certStore.Open(OpenFlags.ReadOnly);
+
+            var cert = certStore.Certificates.Find(X509FindType.FindBySerialNumber, appSettings.CertSerialNumber, true).FirstOrDefault();
+
+            var key = new X509SecurityKey(cert);
+            var validationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ClockSkew =TimeSpan.Zero
+            };
+            return validationParameters;
+        }
+        static public ClaimsPrincipal ValidateToken(AppSettings appSettings, string jwt, out string reason)
+        {
+            reason = "";
+            if (string.IsNullOrEmpty(jwt)) throw new ArgumentException("Token empty");
+            var certStore = new X509Store("My");
+            certStore.Open(OpenFlags.ReadOnly);
+
+            var cert = certStore.Certificates.Find(X509FindType.FindBySerialNumber, appSettings.CertSerialNumber, true).FirstOrDefault();
+
+            var key = new X509SecurityKey(cert);
+            var validationParameters = TokenValidationParameters(appSettings);
+
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var claims = handler.ValidateToken(jwt, validationParameters, out var validatedToken);
+                if (claims != null && validatedToken != null)
+                {
+                    return claims;
+                }
+                return null;
+            }
+            catch (SecurityTokenInvalidSignatureException signEx)
+            {
+                reason = "Invalid signature";
+                return null;
+            }
+            catch (SecurityTokenExpiredException expEx)
+            {
+                reason = "Token expired";
+                return null;
+            }
+            catch (Exception ex)
+            {
+                reason = ex.Message;
+                return null;
+            }
+
         }
     }
 }

@@ -12,10 +12,12 @@ namespace t9n.api.model
             HttpStatus = httpStatus;
             Message = message;
             MoreInfo = moreInfo;
+
         }
         public int HttpStatus { get; set; }
         public string Message { get; set; }
         public string MoreInfo { get; set; }
+        public object Value { get; set; }
 
     }
 }

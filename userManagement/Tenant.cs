@@ -10,6 +10,7 @@ namespace userManagement
     {
         public Guid TenantKey { get; set; } //Internal Id. Necessary for allowing a user to access Tenant data 
         public string TenantName { get; set; }
-        public List<User> TenantUsers { get; set; } = new List<User>();
+
+        public string AdminUserName { get; set; }
     }
 }
