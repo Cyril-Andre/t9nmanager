@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using t9n.DAL;
 
 namespace t9n.DAL.Migrations
 {
     [DbContext(typeof(t9nDbContext))]
-    partial class t9nDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220510175744_20220510_Change_TenantStructure")]
+    partial class _20220510_Change_TenantStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,9 +107,6 @@ namespace t9n.DAL.Migrations
                     b.Property<Guid>("TenantInternalId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdminUserName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("DbUserUserInternalId")
                         .HasColumnType("uniqueidentifier");

@@ -9,7 +9,7 @@ namespace userManagement
         public string UserEmail { get; set; }
         public string UserPassword { get; set; }
         public DateTime UserBirthDate { get; set; }
-
+        public Guid? TenantId { get; set; }
         public bool Validate(out string reason)
         {
             if (DateTime.Today.Year - UserBirthDate.Year < 13)
