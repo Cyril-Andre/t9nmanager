@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:t9n_manager_flutter_client/domains/arb_management/models/arb_resource_collection.dart';
@@ -40,7 +42,7 @@ void main() {
     expect(title.value, "Genome Master");
     expect(title.description, "Name of the application");
 
-    var test_plural = deserialized.arbEntries.firstWhere((element) => element.id == "test_plural");
-    expect(test_plural.id, "test_plural");
+    var testPlural = deserialized.arbEntries.firstWhere((element) => element.id == "test_plural");
+    expect(testPlural.id, "test_plural");
   });
 }
