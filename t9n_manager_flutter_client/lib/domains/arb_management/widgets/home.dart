@@ -18,22 +18,24 @@ class _HomeState extends State<Home> {
     double width = MediaQuery.of(context).size.width > context.watch<AppState>().screenMaxSize ? context.watch<AppState>().screenMaxSize : MediaQuery.of(context).size.width;
     double cardSize = context.watch<AppState>().cardSize;
     int crossAxisCount = (width / cardSize).floor();
-    return GridView.count(
-      crossAxisCount: crossAxisCount,
-      padding: const EdgeInsets.all(5.0),
-      children: [
-        MenuCard(
-          cardSize: cardSize,
-          title: S.of(context).menu_tenants,
-          onPressed:()=> tapMenu(context,'/tenant'),
-        ),
-
-        MenuCard(
-          cardSize: cardSize,
-          title: S.of(context).menu_projects,
-        ),
-
-      ],
+    return Flexible(
+      child: GridView.count(
+        crossAxisCount: crossAxisCount,
+        padding: const EdgeInsets.all(5.0),
+        children: [
+          MenuCard(
+            cardSize: cardSize,
+            title: S.of(context).menu_tenants,
+            onPressed:()=> tapMenu(context,'/tenant'),
+          ),
+    
+          MenuCard(
+            cardSize: cardSize,
+            title: S.of(context).menu_projects,
+          ),
+    
+        ],
+      ),
     );
   }
 

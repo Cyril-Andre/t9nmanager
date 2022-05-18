@@ -22,6 +22,10 @@ class _TenantScreenState extends State<TenantScreen> {
     AppSettings appSettings = context.watch<AppSettings>();
     AppState appState = context.watch<AppState>();
     var jwt = appState.jwt;
+    double width = MediaQuery.of(context).size.width > context.watch<AppState>().screenMaxSize ? context.watch<AppState>().screenMaxSize : MediaQuery.of(context).size.width;
+    double cardSize = context.watch<AppState>().cardSize;
+    int crossAxisCount = (width / cardSize).floor();
+
     return FutureBuilder<List<Tenant>>(
         future: getAllTenants(appSettings, jwt, context),
         builder: (context, AsyncSnapshot<List<Tenant>> snapshot) {
@@ -32,25 +36,31 @@ class _TenantScreenState extends State<TenantScreen> {
               appBar: AppBar(
                 title: Text(S.of(context).title),
               ),
-              body: getTenantCards(snapshot.requireData),
+              body: getTenantCards(snapshot.requireData, crossAxisCount),
             );
           } else if (snapshot.hasError) {
             ApiException e = snapshot.error as ApiException;
-            return alert(S.of(context).api_error_title, e.t9nMessage, S.of(context).common_button_ok, context);
+            if (e.code == 401) {
+              return alert(S.of(context).api_error_title, e.t9nMessage, S.of(context).common_button_ok, "/relog", context);
+            } else {
+              return alert(S.of(context).api_error_title, e.t9nMessage, S.of(context).common_button_ok, "", context);
+            }
           } else {
             return const Text("");
           }
         });
   }
 
-  Widget getTenantCards(List<Tenant> tenants) {
+  Widget getTenantCards(List<Tenant> tenants, int crossAxisCount) {
     try {
       List<Widget> listTenantCards = <Widget>[];
       for (var counter = 0; counter < tenants.length; counter++) {
-        listTenantCards.add(TenantCard(tenant:tenants[counter], addNew:false));
+        listTenantCards.add(TenantCard(tenant: tenants[counter], addNew: false));
       }
-      listTenantCards.add(TenantCard(tenant:Tenant("_", S.of(context).tenant_add_button),addNew: true));
-      return Row(
+      listTenantCards.add(TenantCard(tenant: Tenant("_", S.of(context).tenant_add_button), addNew: true));
+      return GridView.count(
+        crossAxisCount: crossAxisCount,
+        padding: const EdgeInsets.all(5.0),
         children: listTenantCards,
       );
     } catch (e) {

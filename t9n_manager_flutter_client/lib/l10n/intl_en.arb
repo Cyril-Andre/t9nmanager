@@ -10,6 +10,8 @@
     },
 
     "common_button_ok":"Ok",
+    "common_button_yes":"Yes",
+    "common_button_cancel":"Cancel",
 
     "menu_tenants":"Tenants",
     "@menu_tenants":{
@@ -70,11 +72,17 @@
     "signup_form_textfieldlabel_otp":"Enter OTP code",
 
     "tenant_add_button":"Add new tenant",
+    "tenant_alert_title_confirm_button_add":"New Tenant",
+    "tenant_alert_message_confirm_button_add":"Are you sure you want to add a new tenant?", 
+    "tenant_alert_title_confirm_button_delete":"Remove Tenant",
+    "tenant_alert_message_confirm_button_delete":"Are you sure you want to leave this tenant?", 
 
     "exception_message_userunknown":"Sorry, we cannot find you as a user.",
     "exception_message_wrongtoken":"Authorization token invalid.",
     "exception_message_unexpected":"An unexpected error occured.",
     "exception_message_timeout":"Server became unreachable. Please try again.",
+    "exception_message_notauthoraized":"Authorization token expired. Please log in.",
+    "exception_message_tenantunknown":"Sorry, we cannot find the tenant you want to leave as being part or your tenants.",
 
     "api_error_title":"An error occured"
 

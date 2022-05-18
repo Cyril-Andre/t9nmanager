@@ -99,7 +99,8 @@ class _LoginFormState extends State<LoginForm> {
                         postLogin(userLoginModel, appSettings).then((value) {
                           if (value.httpStatus == 200) {
                             context.read<AppState>().setToken(value.message);
-                            context.read<AppState>().toggleLogedIn();
+                            context.read<AppState>().logIn();
+                            Navigator.popAndPushNamed(context, "/");
                           } else {
                             alert(S.of(context).login_form_msg_login_failed_title, value.message + "-" + value.moreInfo, S.of(context).common_button_ok);
                           }
