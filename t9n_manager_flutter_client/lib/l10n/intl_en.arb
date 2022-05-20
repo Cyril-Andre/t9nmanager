@@ -40,6 +40,10 @@
 
     "signup_form_title":"Signup",
     "signup_form_subtitle":"Create your t9n Manager account",
+    "signup_form_validator_firstname":"Please type your first name.",
+    "signup_form_textfieldlabel_firstname":"Enter your first name",
+    "signup_form_validator_lastname":"Please type your last name.",
+    "signup_form_textfieldlabel_lastname":"Enter your last name",
     "signup_form_validator_login":"Please type your login.",
     "signup_form_textfieldlabel_login":"Enter your login",
     "signup_form_validator_email":"Please type your email.",
