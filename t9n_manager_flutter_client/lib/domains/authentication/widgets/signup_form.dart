@@ -21,6 +21,8 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController txtFirstname = TextEditingController();
+  TextEditingController txtLastname = TextEditingController();
   TextEditingController txtLogin = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
@@ -57,6 +59,35 @@ class _SignupFormState extends State<SignupForm> {
                       fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 verticalSpaceTiny,
+                //lastname
+                TextFormField(
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).signup_form_validator_lastname;
+                    }
+                    return null;
+                  },
+                  controller: txtLastname,
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).signup_form_textfieldlabel_lastname),
+                  ),
+                ),
+                verticalSpaceTiny,
+                //firstname
+                TextFormField(
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).signup_form_validator_firstname;
+                    }
+                    return null;
+                  },
+                  controller: txtFirstname,
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).signup_form_textfieldlabel_firstname),
+                  ),
+                ),
+
+                verticalSpaceTiny,
                 //Login
                 TextFormField(
                   validator: (String? value) {
@@ -80,6 +111,7 @@ class _SignupFormState extends State<SignupForm> {
                     return null;
                   },
                   controller: txtEmail,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     label: Text(S.of(context).signup_form_textfieldlabel_email),
                   ),
@@ -164,11 +196,14 @@ class _SignupFormState extends State<SignupForm> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         UserRegistrationModel userRegistrationModel =
-                            UserRegistrationModel(
+                            UserRegistrationModel(                                
                                 txtLogin.text,
                                 txtEmail.text,
                                 DateTime.parse(txtBirthdate.text),
-                                txtPassword.text);
+                                txtPassword.text,
+                                txtFirstname.text,
+                                txtLastname.text
+                                );
                         postSignup(userRegistrationModel, appSettings)
                             .then((value) {
                           if (value.httpStatus == 200) {
