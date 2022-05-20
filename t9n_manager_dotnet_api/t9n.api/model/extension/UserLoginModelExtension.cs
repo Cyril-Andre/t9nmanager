@@ -11,7 +11,7 @@ namespace t9n.api.model.extension
 {
     public static class UserLoginModelExtension
     {
-        public static bool ValidateCredentials(this UserLoginModel login, t9nDbContext context, out string reason)
+        public static User ValidateCredentials(this UserLoginModel login, t9nDbContext context, out string reason)
         {
             reason = "";
             //Look for user with this username
@@ -21,16 +21,21 @@ namespace t9n.api.model.extension
                 if (!dbUser.UserEmailValidated)
                 {
                     reason = "Email has not been confirmed. Account not activated.";
-                    return false;
+                    return null;
                 }
                 var password = login.Password;
                 //Check password validity based on hash & salt 
-                return Security.PasswordHashProvider.ValidatePassword(password, ByteConverter.GetHexBytes(dbUser.Salt),
-                    ByteConverter.GetHexBytes(dbUser.UserPasswordHash));
+                if (Security.PasswordHashProvider.ValidatePassword(password, ByteConverter.GetHexBytes(dbUser.Salt),
+                    ByteConverter.GetHexBytes(dbUser.UserPasswordHash)))
+                {
+                    reason = "Login successful";
+                    User user = new User { UserName = dbUser.UserName, UserEmail = dbUser.UserEmail, UserBirthDate = dbUser.UserBirthdate, UserTenants = dbUser.UserTenants.ToTenantsList() };
+                    return user;
+                }
             }
 
             reason = "User unknown.";
-            return false;
+            return null;
         }
     }
 }

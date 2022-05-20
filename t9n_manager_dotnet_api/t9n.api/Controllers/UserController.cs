@@ -13,19 +13,22 @@ using t9n.api.model.extension;
 using t9n.DAL;
 using userManagement;
 using Security;
+using t9n.api.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace t9n.api.Controllers
 {
+    [AllowAnonymous]
     [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly t9nDbContext _context;
+        private readonly t9nDbContext _dbContext;
         private readonly IOptions<AppSettings> _appSettings;
 
-        public UserController(t9nDbContext context, IOptions<AppSettings> appSettings)
+        public UserController(t9nDbContext dbContext, IOptions<AppSettings> appSettings)
         {
-            _context = context;
+            _dbContext = dbContext;
             _appSettings = appSettings;
         }
         [HttpPost("register")]
@@ -33,7 +36,7 @@ namespace t9n.api.Controllers
         {
             try
             {
-                if (userRegistrationModel.Exists(_context, out var moreMessage))
+                if (userRegistrationModel.Exists(_dbContext, out var moreMessage))
                 {
                     return Conflict(new ApiMessage
                         (httpStatus:409, message: "User cannot register", moreInfo: moreMessage));
@@ -45,8 +48,14 @@ namespace t9n.api.Controllers
                         new ApiMessage(httpStatus: 403, message: "User cannot register", moreInfo: reason));
                 }
                 var dbUser = userRegistrationModel.ToDatabase();
-                _context.Users.Add(dbUser);
-                _context.SaveChanges();
+                if (userRegistrationModel.TenantId != null)
+                {
+                    var dbTenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == userRegistrationModel.TenantId);
+                    if (dbTenant!=null)
+                        dbUser.UserTenants.Add(dbTenant);
+                }
+                _dbContext.Users.Add(dbUser);
+                _dbContext.SaveChanges();
                 CommunicationHelper.SendConfirmationMail(userRegistrationModel.UserEmail,$"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.UserInternalId:D}",_appSettings.Value.TemplatesPath,"en");
                 return Ok(new ApiMessage (httpStatus: 200, message: $"User is registered with a {reason} password"));
             }
@@ -61,9 +70,11 @@ namespace t9n.api.Controllers
         {
             try
             {
-                if (userLogin.ValidateCredentials(_context,out var reason))
+                var user = userLogin.ValidateCredentials(_dbContext, out var reason);
+                if (user!=null)
                 {
-                    return Ok(new ApiMessage(httpStatus: 200,message:"Login successfully"));
+                    string token = TokenHelper.CreateToken(_appSettings.Value, user);
+                    return Ok(new ApiMessage(httpStatus:200,message:token));
                 }
                 else
                 {
@@ -93,10 +104,10 @@ namespace t9n.api.Controllers
             try
             {
                 Guid reference = Guid.Parse(o);
-                var user = _context.Users.FirstOrDefault(u => u.UserInternalId == reference);
+                var user = _dbContext.Users.FirstOrDefault(u => u.UserInternalId == reference);
                 if (user == null) return NotFound(new ApiMessage(httpStatus: 404, message: "User unknown."));
                 user.UserEmailValidated = true;
-                _context.SaveChanges();
+                _dbContext.SaveChanges();
                 return Ok(new ApiMessage(httpStatus: 200, message: "Account activated."));
             }
             catch (Exception ex)
@@ -113,14 +124,14 @@ namespace t9n.api.Controllers
             {
                 if (userResetPasswordModel == null || String.IsNullOrEmpty(userResetPasswordModel.UserEmail))
                     return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid"));
-                var user = _context.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                var user = _dbContext.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
                 if (user == null)
                 {
                     return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
                 }
                 string otp = OtpProvider.GenerateOtp(6, true);
                 user.ResetPasswordOtp = otp;
-                _context.SaveChanges();
+                _dbContext.SaveChanges();
                 CommunicationHelper.SendResetPasswordMail(user.UserEmail,user.UserName, otp, _appSettings.Value.TemplatesPath, "en");
                 return Ok(new ApiMessage(httpStatus: 200, message: $"Reset password OTP sent"));
             }
@@ -143,7 +154,7 @@ namespace t9n.api.Controllers
                 {
                     return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid",moreInfo:reason));
                 }
-                var user = _context.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                var user = _dbContext.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
                 if (user == null)
                 {
                     return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
@@ -152,8 +163,8 @@ namespace t9n.api.Controllers
                 {
                     return Unauthorized(new ApiMessage(httpStatus: 401, message: $"User password cannot be reintialized"));
                 }
-                var dbUser = userResetPasswordModel.ToDatabase(_context);
-                _context.SaveChanges();
+                var dbUser = userResetPasswordModel.ToDatabase(_dbContext);
+                _dbContext.SaveChanges();
                 return Ok(new ApiMessage(httpStatus: 200, message: $"Password reset"));
             }
             catch (Exception ex)
