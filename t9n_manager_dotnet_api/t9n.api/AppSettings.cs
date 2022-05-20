@@ -10,6 +10,7 @@ namespace t9n.api
         public string ConfirmationEmailUrl { get; set; }
         public string TemplatesPath { get; set; }
         public string CertFullPath { get; set; }
+        public string CertSerialNumber { get; set; }
 
     }
 }

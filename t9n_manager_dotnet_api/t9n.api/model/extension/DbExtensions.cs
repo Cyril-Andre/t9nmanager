@@ -1,0 +1,68 @@
+﻿using System.Collections.Generic;
+using t9n.DAL;
+using userManagement;
+
+namespace t9n.api.model.extension
+{
+    public static class DbExtensions
+    {
+        public static User ToUser(this DbUser dbUser)
+        {
+            if (dbUser == null) return null;
+            var user = new User
+            {
+                UserName = dbUser.UserName,
+                UserEmail = dbUser.UserEmail,
+                UserBirthDate = dbUser.UserBirthdate,
+                UserTenants = dbUser.UserTenants.ToTenantsList()
+            };
+            return user;
+        }
+        public static List<User> ToUsersList(this List<DbUser> listDbUser)
+        {
+            if (listDbUser == null) return null;
+            List<User> list = new List<User>();
+            foreach (DbUser dbUser in listDbUser)
+            {
+                var user = new User
+                {
+                    UserName = dbUser.UserName,
+                    UserEmail = dbUser.UserEmail,
+                    UserBirthDate = dbUser.UserBirthdate,
+                    UserTenants = dbUser.UserTenants.ToTenantsList()
+                };
+                list.Add(user);
+            }
+            return list;
+        }
+        public static Tenant ToTenant(this DbTenant dbTenant)
+        {
+            if (dbTenant == null) return null;
+            var tenant = new Tenant
+            {
+                TenantKey = dbTenant.TenantInternalId,
+                TenantName = dbTenant.TenantName,
+                AdminUserName = dbTenant.AdminUserName
+            };
+            return tenant;
+        }
+
+        public static List<Tenant> ToTenantsList(this List<DbTenant> listDbTenant)
+        {
+            if (listDbTenant == null) return null;
+            List<Tenant> list = new List<Tenant>();
+            foreach (DbTenant t in listDbTenant)
+            {
+                Tenant tenant = new Tenant
+                {
+                    TenantKey = t.TenantInternalId,
+                    TenantName = t.TenantName,
+                    AdminUserName=t.AdminUserName
+                };
+                list.Add(tenant);
+
+            }
+            return list;
+        }
+    }
+}

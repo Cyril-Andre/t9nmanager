@@ -15,7 +15,17 @@ namespace t9n.DAL
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid TenantInternalId { get; set; }
         public string TenantName { get; set; }
-        public List<DbUser> TenantUsers { get; set; } = new List<DbUser>();
+
+        public string AdminUserName { get; set; }
+
 
     }
+
+    [Table("Invitations")]
+    public class DbInvitation
+    {
+        public Guid TenantInternalId { get; set; }
+        public String UserEmail { get; set; }
+    }
+
 }
