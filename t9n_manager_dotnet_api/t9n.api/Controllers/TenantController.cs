@@ -10,6 +10,7 @@ using t9n.api.model;
 using Microsoft.Extensions.Options;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Communication;
 
 namespace t9n.api.Controllers
 {
@@ -39,7 +40,7 @@ namespace t9n.api.Controllers
                 var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
                 if (string.IsNullOrEmpty(userName))
                     return BadRequest(new ApiMessage(400, message: "Token invalid"));
-                var user = _dbContext.Users.Include(user => user.UserTenants).FirstOrDefault(u => u.UserName == userName)?.ToUser();
+                var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName)?.ToUser();
                 if (user == null)
                     return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
 
@@ -74,7 +75,8 @@ namespace t9n.api.Controllers
                     AdminUserName = userName,
                 };
                 _dbContext.Tenants.Add(dbTenant);
-                user.UserTenants.Add(dbTenant);
+                user.Tenants.Add(dbTenant);
+              
                 _dbContext.SaveChanges();
                 return Ok(dbTenant.ToTenant());
             }
@@ -97,21 +99,21 @@ namespace t9n.api.Controllers
                 var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
                 if (string.IsNullOrEmpty(userName))
                     return BadRequest(new ApiMessage(400, message: "Token invalid"));
-                var user = _dbContext.Users.Include(user => user.UserTenants).FirstOrDefault(u => u.UserName == userName);
+                var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName);
                 if (user == null)
                     return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-                var tenant = user.UserTenants.Find(t => t.TenantInternalId.ToString("D") == tenantKey);
+                var tenant = user.Tenants.Find(t => t.TenantInternalId.ToString("D") == tenantKey);
                 if (tenant==null)
                     return NotFound(new ApiMessage(404, message: $"Cannot find tenant {tenantKey} in the tenants' list of {user.UserName}"));
                 if (tenant.AdminUserName == user.UserName)
                 {
-                    var allUsers = _dbContext.Users.Where(u => u.UserTenants.Contains(tenant)).ToList();
+                    var allUsers = _dbContext.Users.Where(u => u.Tenants.Contains(tenant)).ToList();
                     foreach (var dbUser in allUsers)
                     {
-                        dbUser.UserTenants.Remove(tenant);
+                        dbUser.Tenants.Remove(tenant);
                     }
                 }
-                user.UserTenants.Remove(tenant);
+                user.Tenants.Remove(tenant);
                 //_dbContext.SaveChanges();
                 var businessUser = user.ToUser();
                 return Ok(businessUser.UserTenants);
@@ -136,16 +138,24 @@ namespace t9n.api.Controllers
             {
                 return NotFound(new ApiMessage(404, $"Tenant with Id = {tenantKey} is unknown"));
             }
+            var claims = User.Claims;
+            var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
+            if (string.IsNullOrEmpty(userName))
+                return BadRequest(new ApiMessage(400, message: "Token invalid"));
+            var currentUser = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName);
+            if (currentUser == null)
+                return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
             var invitedUser = _dbContext.Users.FirstOrDefault(u=>u.UserEmail.ToLower()==userEmail.ToLower());
             if (invitedUser == null)
             {
-                var invit = _dbContext.Invations.FirstOrDefault(i=>i.UserEmail==userEmail && i.TenantInternalId==tenantGuid);
+                var invit = _dbContext.Invitations.FirstOrDefault(i=>i.UserEmail==userEmail && i.TenantInternalId==tenantGuid);
                 if (invit == null)
                 {
                     invit= new DbInvitation { TenantInternalId=tenantGuid, UserEmail=userEmail };
-                    _dbContext.Invations.Add(invit);
+                    _dbContext.Invitations.Add(invit);
                     _dbContext.SaveChanges();
-                    ApiMessage result = new ApiMessage(200, $"{invitedUser.UserName} invited to tenant {tenant.TenantName}.");
+                    CommunicationHelper.SendInvitationMail(userEmail, _appSettings.t9nManagerUrl, currentUser.Firstname, currentUser.Lastname, tenant.TenantName, _appSettings.TemplatesPath, locale: "en");
+                    ApiMessage result = new ApiMessage(200, $"{userEmail} invited to tenant {tenant.TenantName}.");
                     result.Value = tenant.ToTenant();
                     return Ok(result);
                 }
@@ -153,11 +163,11 @@ namespace t9n.api.Controllers
             }
             else
             {
-                if (invitedUser.UserTenants.Contains(tenant))
+                if (invitedUser.Tenants.Contains(tenant))
                 {
                     return Conflict(new ApiMessage(409, $"User {invitedUser.UserName} is already part of tenant {tenant.TenantName}."));
                 }
-                invitedUser.UserTenants.Add(tenant);
+                invitedUser.Tenants.Add(tenant);
                 _dbContext.SaveChanges();
                 ApiMessage result = new ApiMessage(200, $"{invitedUser.UserName} added to tenant {tenant.TenantName}.");
                 result.Value = tenant.ToTenant();

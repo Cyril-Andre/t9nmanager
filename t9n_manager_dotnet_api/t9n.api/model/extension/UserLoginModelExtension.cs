@@ -29,7 +29,7 @@ namespace t9n.api.model.extension
                     ByteConverter.GetHexBytes(dbUser.UserPasswordHash)))
                 {
                     reason = "Login successful";
-                    User user = new User { UserName = dbUser.UserName, UserEmail = dbUser.UserEmail, UserBirthDate = dbUser.UserBirthdate, UserTenants = dbUser.UserTenants.ToTenantsList() };
+                    User user = new User { UserName = dbUser.UserName, UserEmail = dbUser.UserEmail, UserBirthDate = dbUser.UserBirthdate, UserTenants = dbUser.Tenants.ToTenantsList() };
                     return user;
                 }
             }

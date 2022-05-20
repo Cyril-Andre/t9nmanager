@@ -11,14 +11,16 @@ namespace t9n.api.model.extension
             if (dbUser == null) return null;
             var user = new User
             {
+                FirstName = dbUser.Firstname,
+                LastName = dbUser.Lastname,
                 UserName = dbUser.UserName,
                 UserEmail = dbUser.UserEmail,
                 UserBirthDate = dbUser.UserBirthdate,
-                UserTenants = dbUser.UserTenants.ToTenantsList()
+                UserTenants = dbUser.Tenants.ToTenantsList()
             };
             return user;
         }
-        public static List<User> ToUsersList(this List<DbUser> listDbUser)
+        public static List<User> ToUsersList(this List<DbUser> listDbUser, bool fromTenant)
         {
             if (listDbUser == null) return null;
             List<User> list = new List<User>();
@@ -26,10 +28,12 @@ namespace t9n.api.model.extension
             {
                 var user = new User
                 {
+                    FirstName=dbUser.Firstname,
+                    LastName=dbUser.Lastname,
                     UserName = dbUser.UserName,
                     UserEmail = dbUser.UserEmail,
                     UserBirthDate = dbUser.UserBirthdate,
-                    UserTenants = dbUser.UserTenants.ToTenantsList()
+                    UserTenants = dbUser.Tenants.ToTenantsList()
                 };
                 list.Add(user);
             }

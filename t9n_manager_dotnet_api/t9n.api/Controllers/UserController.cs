@@ -52,9 +52,21 @@ namespace t9n.api.Controllers
                 {
                     var dbTenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == userRegistrationModel.TenantId);
                     if (dbTenant!=null)
-                        dbUser.UserTenants.Add(dbTenant);
+                        dbUser.Tenants.Add(dbTenant);
                 }
                 _dbContext.Users.Add(dbUser);
+                //Check if an invitation is pending
+                var invitations = _dbContext.Invitations.Where(i=>i.UserEmail.ToLower()==dbUser.UserEmail.ToLower()).ToList();
+                foreach(DbInvitation invit in invitations)
+                {
+                    var tenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == invit.TenantInternalId);
+                    if (tenant != null)
+                    {
+                        dbUser.Tenants.Add(tenant);
+                        //tenant.Users.Add(dbUser);
+                        _dbContext.Invitations.Remove(invit);
+                    }
+                }
                 _dbContext.SaveChanges();
                 CommunicationHelper.SendConfirmationMail(userRegistrationModel.UserEmail,$"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.UserInternalId:D}",_appSettings.Value.TemplatesPath,"en");
                 return Ok(new ApiMessage (httpStatus: 200, message: $"User is registered with a {reason} password"));
