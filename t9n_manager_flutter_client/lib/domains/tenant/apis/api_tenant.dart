@@ -5,7 +5,6 @@ import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
 import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_settings.dart';
-import '../../../shared/models/api_message.dart';
 import '../models/tenant.dart';
 
 Future<List<Tenant>> getAllTenants(AppSettings appSettings, String jwt, BuildContext context) async {

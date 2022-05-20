@@ -9,9 +9,6 @@ class UserLoginModel {
   }
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'userName': userName,
-      'password': password
-    };
+    return <String, dynamic>{'userName': userName, 'password': password};
   }
 }
