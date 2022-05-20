@@ -11,6 +11,7 @@ namespace t9n.api
         public string TemplatesPath { get; set; }
         public string CertFullPath { get; set; }
         public string CertSerialNumber { get; set; }
+        public string t9nManagerUrl { get; set; }
 
     }
 }

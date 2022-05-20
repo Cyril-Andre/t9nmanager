@@ -10,7 +10,24 @@ namespace t9n.DAL
         public DbSet<DbArbResourceEntryAttribute> ArbAttributes { get; set; }
         public DbSet<DbArbResourceEntry> ArbEntry { get; set; }
         public DbSet<DbArbResourceEntryCollection> ArbCollection { get; set; }
+        //public DbSet<DbUsersInTenant> UsersInTenant { get; set; }
+        public DbSet<DbInvitation> Invitations { get; set; }
 
-        public DbSet<DbInvitation> Invations { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            /*
+            modelBuilder.Entity<DbInvitation>().HasKey(u => new
+            {
+                u.TenantInternalId,
+                u.UserEmail
+            });
+            modelBuilder.Entity<DbUsersInTenant>().HasKey(u => new
+            {
+                u.UserInternalId,
+                u.TenantInternalId
+            });
+            */
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

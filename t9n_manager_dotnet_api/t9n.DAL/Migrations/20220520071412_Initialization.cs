@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace t9n.DAL.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initialization : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,13 +36,45 @@ namespace t9n.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invitations",
+                columns: table => new
+                {
+                    InvitationInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invitations", x => x.InvitationInternalId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tenants",
+                columns: table => new
+                {
+                    TenantInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdminUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tenants", x => x.TenantInternalId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     UserInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserPasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserEmailValidated = table.Column<bool>(type: "bit", nullable: false),
+                    UserBirthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResetPasswordOtp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,37 +102,56 @@ namespace t9n.DAL.Migrations
                         name: "FK_ArbEntry_ArbEntryAttribute_ContextId",
                         column: x => x.ContextId,
                         principalTable: "ArbEntryAttribute",
-                        principalColumn: "AttributeInternalId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AttributeInternalId");
                     table.ForeignKey(
                         name: "FK_ArbEntry_ArbEntryAttribute_DescriptionId",
                         column: x => x.DescriptionId,
                         principalTable: "ArbEntryAttribute",
-                        principalColumn: "AttributeInternalId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AttributeInternalId");
                     table.ForeignKey(
                         name: "FK_ArbEntry_ArbEntryAttribute_ScreenId",
                         column: x => x.ScreenId,
                         principalTable: "ArbEntryAttribute",
-                        principalColumn: "AttributeInternalId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AttributeInternalId");
                     table.ForeignKey(
                         name: "FK_ArbEntry_ArbEntryAttribute_SourceTextId",
                         column: x => x.SourceTextId,
                         principalTable: "ArbEntryAttribute",
-                        principalColumn: "AttributeInternalId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AttributeInternalId");
                     table.ForeignKey(
                         name: "FK_ArbEntry_ArbEntryAttribute_TypeId",
                         column: x => x.TypeId,
                         principalTable: "ArbEntryAttribute",
-                        principalColumn: "AttributeInternalId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AttributeInternalId");
                     table.ForeignKey(
                         name: "FK_ArbEntry_ArbEntryCollection_EntryCollectionId",
                         column: x => x.EntryCollectionId,
                         principalTable: "ArbEntryCollection",
                         principalColumn: "CollectionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DbTenantDbUser",
+                columns: table => new
+                {
+                    TenantsTenantInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsersUserInternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbTenantDbUser", x => new { x.TenantsTenantInternalId, x.UsersUserInternalId });
+                    table.ForeignKey(
+                        name: "FK_DbTenantDbUser_Tenants_TenantsTenantInternalId",
+                        column: x => x.TenantsTenantInternalId,
+                        principalTable: "Tenants",
+                        principalColumn: "TenantInternalId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DbTenantDbUser_Users_UsersUserInternalId",
+                        column: x => x.UsersUserInternalId,
+                        principalTable: "Users",
+                        principalColumn: "UserInternalId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -131,6 +184,11 @@ namespace t9n.DAL.Migrations
                 name: "IX_ArbEntry_TypeId",
                 table: "ArbEntry",
                 column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DbTenantDbUser_UsersUserInternalId",
+                table: "DbTenantDbUser",
+                column: "UsersUserInternalId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -139,13 +197,22 @@ namespace t9n.DAL.Migrations
                 name: "ArbEntry");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "DbTenantDbUser");
+
+            migrationBuilder.DropTable(
+                name: "Invitations");
 
             migrationBuilder.DropTable(
                 name: "ArbEntryAttribute");
 
             migrationBuilder.DropTable(
                 name: "ArbEntryCollection");
+
+            migrationBuilder.DropTable(
+                name: "Tenants");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

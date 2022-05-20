@@ -16,6 +16,8 @@ namespace t9n.api.model.extension
             var passwordHashContainer = Security.PasswordHashProvider.CreateHash(user.UserPassword);
             DbUser dbUser = new DbUser
             {
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
                 UserName = user.UserName,
                 UserEmail = user.UserEmail,
                 UserPasswordHash = ByteConverter.GetHexString(passwordHashContainer.HashedPassword) ,//user.UserPassword,

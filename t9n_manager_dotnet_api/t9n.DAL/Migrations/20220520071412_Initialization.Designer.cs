@@ -7,19 +7,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using t9n.DAL;
 
+#nullable disable
+
 namespace t9n.DAL.Migrations
 {
     [DbContext(typeof(t9nDbContext))]
-    [Migration("20220405095920_Initial")]
-    partial class Initial
+    [Migration("20220520071412_Initialization")]
+    partial class Initialization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.15")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("DbTenantDbUser", b =>
+                {
+                    b.Property<Guid>("TenantsTenantInternalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersUserInternalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TenantsTenantInternalId", "UsersUserInternalId");
+
+                    b.HasIndex("UsersUserInternalId");
+
+                    b.ToTable("DbTenantDbUser");
+                });
 
             modelBuilder.Entity("t9n.DAL.DbArbResourceEntry", b =>
                 {
@@ -102,24 +120,91 @@ namespace t9n.DAL.Migrations
                     b.ToTable("ArbEntryCollection");
                 });
 
+            modelBuilder.Entity("t9n.DAL.DbInvitation", b =>
+                {
+                    b.Property<Guid>("InvitationInternalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantInternalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InvitationInternalId");
+
+                    b.ToTable("Invitations");
+                });
+
+            modelBuilder.Entity("t9n.DAL.DbTenant", b =>
+                {
+                    b.Property<Guid>("TenantInternalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdminUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenantName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TenantInternalId");
+
+                    b.ToTable("Tenants");
+                });
+
             modelBuilder.Entity("t9n.DAL.DbUser", b =>
                 {
                     b.Property<Guid>("UserInternalId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Firstname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lastname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResetPasswordOtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UserBirthdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserEmail")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("UserEmailValidated")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserPassword")
+                    b.Property<string>("UserPasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserInternalId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DbTenantDbUser", b =>
+                {
+                    b.HasOne("t9n.DAL.DbTenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantsTenantInternalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("t9n.DAL.DbUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersUserInternalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("t9n.DAL.DbArbResourceEntry", b =>

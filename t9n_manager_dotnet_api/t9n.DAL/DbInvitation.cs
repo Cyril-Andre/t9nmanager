@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 
 namespace t9n.DAL
 {
-    [Table("Tenants")]
-    public class DbTenant
+    [Table("Invitations")]
+    public class DbInvitation
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid InvitationInternalId { get; set; }
+        //        [Key, Column(Order =0)]
         public Guid TenantInternalId { get; set; }
-        public string TenantName { get; set; }
-
-        public string AdminUserName { get; set; }
-        public List<DbUser> Users { get; set; }=new List<DbUser>();
- 
+        //        [Key, Column(Order = 1)]
+        public String UserEmail { get; set; }
     }
 
 }
