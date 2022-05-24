@@ -8,7 +8,7 @@ class AppState with ChangeNotifier {
   double cardSize = 150;
   bool isLoggedIn = false;
   String jwt = '';
-  Tenant selectedTenant = Tenant("_", "Public");
+  Tenant selectedTenant = Tenant("_", "Public","PublicAdmin");
   String selectedProject = "(none)";
 
   void logIn() {
