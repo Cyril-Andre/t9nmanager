@@ -96,7 +96,7 @@ class _LoginFormState extends State<LoginForm> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         UserLoginModel userLoginModel = UserLoginModel(txtLogin.text, txtPassword.text);
-                        postLogin(userLoginModel, appSettings).then((value) {
+                        postLogin(userLoginModel, context).then((value) {
                           if (value.httpStatus == 200) {
                             context.read<AppState>().setToken(value.message);
                             context.read<AppState>().logIn();
