@@ -28,7 +28,7 @@ namespace t9n.api.Controllers
             _dbContext = dbContext;
         }
         [HttpGet()]
-        [ProducesResponseType(typeof(List<Tenant>), 200)]
+        [ProducesResponseType(typeof(ApiMessage), 200)]
         [ProducesResponseType(typeof(ApiMessage), 404)]
         [ProducesResponseType(typeof(ApiMessage), 400)]
         [ProducesResponseType(typeof(ApiMessage), 500)]
@@ -43,8 +43,8 @@ namespace t9n.api.Controllers
                 var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName)?.ToUser();
                 if (user == null)
                     return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-
-                return Ok(user.UserTenants);
+                ApiMessage result = new ApiMessage(httpStatus:200, message:"Success"){Value = user.UserTenants };
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -52,8 +52,8 @@ namespace t9n.api.Controllers
             }
         }
 
-        [HttpPost("create")]
-        [ProducesResponseType(typeof(Tenant), 200)]
+        [HttpPost("create/{tenantName}")]
+        [ProducesResponseType(typeof(ApiMessage), 200)]
         [ProducesResponseType(typeof(ApiMessage), 404)]
         [ProducesResponseType(typeof(ApiMessage), 400)]
         [ProducesResponseType(typeof(ApiMessage), 500)]
@@ -78,7 +78,8 @@ namespace t9n.api.Controllers
                 user.Tenants.Add(dbTenant);
               
                 _dbContext.SaveChanges();
-                return Ok(dbTenant.ToTenant());
+                ApiMessage result = new ApiMessage(httpStatus: 200, message: "Success", moreInfo: "") { Value = dbTenant.ToTenant() };
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -86,8 +87,8 @@ namespace t9n.api.Controllers
             }
         }
 
-        [HttpDelete()]
-        [ProducesResponseType(typeof(List<Tenant>), 200)]
+        [HttpDelete("{tenantKey}")]
+        [ProducesResponseType(typeof(ApiMessage), 200)]
         [ProducesResponseType(typeof(ApiMessage), 404)]
         [ProducesResponseType(typeof(ApiMessage), 400)]
         [ProducesResponseType(typeof(ApiMessage), 500)]
@@ -114,9 +115,8 @@ namespace t9n.api.Controllers
                     }
                 }
                 user.Tenants.Remove(tenant);
-                //_dbContext.SaveChanges();
-                var businessUser = user.ToUser();
-                return Ok(businessUser.UserTenants);
+                _dbContext.SaveChanges();
+                return Ok(new ApiMessage(200,"Success","Tenant successfuly removed"));
             }
             catch (Exception ex)
             {
@@ -124,15 +124,18 @@ namespace t9n.api.Controllers
             }
         }
 
-        [HttpGet("invite")]
+        [HttpPost("invite")]
         [ProducesResponseType(typeof(ApiMessage), 200)]
         [ProducesResponseType(typeof(ApiMessage), 404)]
         [ProducesResponseType(typeof(ApiMessage), 400)]
         [ProducesResponseType(typeof(ApiMessage), 409)]
         [ProducesResponseType(typeof(ApiMessage), 500)]
-        public IActionResult InviteUser(string tenantKey, string userEmail)
+        public IActionResult InviteUser([FromBody]Invitation invitation)
         {
-            Guid tenantGuid = Guid.Parse(tenantKey);
+            string tenantKey = invitation.tenant.TenantKey.ToString();
+            string userEmail = invitation.userEmail;
+            Guid tenantGuid = invitation.tenant.TenantKey;
+
             var tenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == tenantGuid);
             if (tenant == null)
             {
