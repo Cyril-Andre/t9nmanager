@@ -77,12 +77,25 @@
     "tenant_alert_title_confirm_button_delete":"Remove Tenant",
     "tenant_alert_message_confirm_button_delete":"Are you sure you want to leave this tenant?", 
 
+    "tenant_card_add_tenant_title":"Add tenant",
+    "tenant_card_add_tenant_message":"Enter tenant name",   
+    "tenant_card_add_tenant_tooltip":"Add tenant",
+    "tenant_card_add_user_title":"Add user",
+    "tenant_card_add_user_message":"Enter user email",   
+    "tenant_card_add_user_tooltip":"Add user",
+    "tenant_card_select_tenant_tooltip":"Add user",
+    "tenant_card_leave_tenant_title":"Leave tenant",
+    "tenant_card_leave_tenant_message":"Are you sure you want to leave this tenant?",   
+    "tenant_card_leave_tenant_tooltip":"Leave tenant",
+    
     "exception_message_userunknown":"Sorry, we cannot find you as a user.",
     "exception_message_wrongtoken":"Authorization token invalid.",
     "exception_message_unexpected":"An unexpected error occured.",
     "exception_message_timeout":"Server became unreachable. Please try again.",
     "exception_message_notauthoraized":"Authorization token expired. Please log in.",
     "exception_message_tenantunknown":"Sorry, we cannot find the tenant you want to leave as being part or your tenants.",
+    "exception_message_loginfailed":"Login/Password combination was wrong. Login failed",
+    "exception_message_wrongpayload":"The message sent to the server was incorrect. Please, try again.",
 
     "api_error_title":"An error occured"
 

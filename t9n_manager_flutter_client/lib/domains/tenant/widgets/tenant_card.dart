@@ -1,23 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/invitation.dart';
+import 'package:t9n_manager_flutter_client/shared/token_helper.dart';
+import 'package:t9n_manager_flutter_client/shared/widgets/confirm_dialog.dart';
+import 'package:t9n_manager_flutter_client/shared/widgets/input_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/spacer.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../shared/app_settings.dart';
 import '../../../shared/app_state_notifier.dart';
 import '../models/tenant.dart';
 
-class TenantCard extends StatelessWidget {
-  const TenantCard({Key? key, required this.tenant, required this.addNew}) : super(key: key);
+class TenantCard extends StatefulWidget {
+  const TenantCard({Key? key, required this.tenant, required this.addNew, required this.refresh}) : super(key: key);
   final Tenant tenant;
   final bool addNew;
+  final VoidCallback refresh;
+
+  @override
+  State<TenantCard> createState() => _TenantCardState();
+}
+
+class _TenantCardState extends State<TenantCard> {
+  InputDialogController inputDialogController = InputDialogController();
+  ConfirmDialogController confirmDialogController = ConfirmDialogController();
 
   @override
   Widget build(BuildContext context) {
-    Icon icon = const Icon(Icons.delete);
-    if (addNew) {
-      icon = const Icon(Icons.add);
+    AppSettings appSettings = context.watch<AppSettings>();
+    AppState appState = context.watch<AppState>();
+    var jwt = appState.jwt;
+    var currentUser = TokenHelper.parseJwt(jwt)['name'];
+    bool isAdmin = currentUser == widget.tenant.adminUserName;
+    Icon icon = const Icon(Icons.person_add);
+    if (widget.addNew) {
+      icon = const Icon(Icons.bookmark_add_outlined);
     } else {
-      icon = const Icon(Icons.delete);
+      icon = const Icon(Icons.person_add);
     }
     double cardSize = context.watch<AppState>().cardSize;
     return SizedBox(
@@ -25,8 +45,8 @@ class TenantCard extends StatelessWidget {
       height: cardSize,
       child: GestureDetector(
         onTap: () {
-          if (tenant.tenantKey != "_") {
-            changeTenant(tenant, context);
+          if (widget.tenant.tenantKey != "_") {
+            changeTenant(widget.tenant, context);
           }
         },
         child: Card(
@@ -36,13 +56,18 @@ class TenantCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              const Icon(
-                Icons.person,
-                size: 30.0,
-              ),
+              isAdmin
+                  ? const Icon(
+                      Icons.bookmark_border,
+                      size: 30.0,
+                    )
+                  : const Icon(
+                      Icons.bookmark,
+                      size: 30.0,
+                    ),
               verticalSpaceRegular,
               Text(
-                tenant.tenantName,
+                widget.tenant.tenantName,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14),
               ),
@@ -53,7 +78,39 @@ class TenantCard extends StatelessWidget {
                 buttonHeight: 4.0,
                 buttonPadding: const EdgeInsets.all(1.0),
                 children: [
-                  IconButton(onPressed: () => pressButton(tenant, context), icon: icon),
+                  if (widget.addNew)
+                    InputDialog(
+                        controller: inputDialogController,
+                        callToActionIcon: icon,
+                        title: S.of(context).tenant_card_add_tenant_title,
+                        message: S.of(context).tenant_card_add_tenant_message,
+                        toolTip: S.of(context).tenant_card_add_tenant_tooltip,
+                        callBack: () => onAddTenant(appSettings, jwt, context)),
+                  if (isAdmin)
+                    InputDialog(
+                        controller: inputDialogController,
+                        callToActionIcon: icon,
+                        title: S.of(context).tenant_card_add_user_title,
+                        message: S.of(context).tenant_card_add_user_message,
+                        toolTip: S.of(context).tenant_card_add_user_tooltip,
+                        callBack: () => onAddUser(appSettings, jwt, context),
+                        keyboardType: TextInputType.emailAddress
+                    ),
+                  if (!widget.addNew)
+                    IconButton(
+                        tooltip: S.of(context).tenant_card_select_tenant_tooltip,
+                        onPressed: () {
+                          changeTenant(widget.tenant, context);
+                        },
+                        icon: const Icon(Icons.check_box)),
+                  if (!widget.addNew)
+                    ConfirmDialog(
+                        controller: confirmDialogController,
+                        callToActionIcon: const Icon(Icons.delete),
+                        title: S.of(context).tenant_card_leave_tenant_title,
+                        message: S.of(context).tenant_card_leave_tenant_message,
+                        toolTip: S.of(context).tenant_card_leave_tenant_tooltip,
+                        callBack: () => onDelete(appSettings, jwt, context)),
                 ],
               )
             ],
@@ -63,37 +120,25 @@ class TenantCard extends StatelessWidget {
     );
   }
 
-  Future<String?> alert(String title, String message, String confirmButtonLabel, String cancelButtonLabel, BuildContext context, Tenant tenant) async {
-    return (showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), title: Text(title), content: Text(message), actions: <Widget>[
-              TextButton(onPressed: confirm(tenant, context), child: Text(confirmButtonLabel)),
-              TextButton(onPressed: () => Navigator.pop(context, cancelButtonLabel), child: Text(cancelButtonLabel)),
-            ])));
-  }
-
   changeTenant(Tenant tenant, BuildContext context) {
     context.read<AppState>().setTenant(tenant);
     Navigator.pop(context);
   }
 
-  pressButton(Tenant tenant, BuildContext context) {
-    if (tenant.tenantKey == "_") {
-      alert(S.of(context).tenant_alert_title_confirm_button_add, S.of(context).tenant_alert_message_confirm_button_add, S.of(context).common_button_yes,
-          S.of(context).common_button_cancel, context, tenant);
-    } else {
-      alert(S.of(context).tenant_alert_title_confirm_button_delete, S.of(context).tenant_alert_message_confirm_button_delete, S.of(context).common_button_yes,
-          S.of(context).common_button_cancel, context, tenant);
-    }
+  onDelete(AppSettings appSettings, String jwt, BuildContext context) {
+    deleteTenant(appSettings, jwt, context, widget.tenant);
+    widget.refresh();
   }
 
-  confirm(Tenant tenant, BuildContext context) {
-    if (tenant.tenantKey == "_") {
-      Navigator.pushNamed(context, "/addTenant");
-    }
-    else {
-      
-    }
+  onAddTenant(AppSettings appSettings, String jwt, BuildContext context) {
+    String tenantName = inputDialogController.value;
+    createTenant(appSettings, jwt, context, tenantName);
+    widget.refresh();
+  }
+
+  onAddUser(AppSettings appSettings, String jwt, BuildContext context) {
+    String userEmail = inputDialogController.value;
+    Invitation invitation = Invitation(widget.tenant, userEmail);
+    inviteUser(appSettings, jwt, context, invitation);
   }
 }
