@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
 import 'package:t9n_manager_flutter_client/shared/alert.dart';
 import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/shared/token_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_settings.dart';
 import '../../../shared/models/api_exception.dart';
@@ -17,6 +18,13 @@ class TenantScreen extends StatefulWidget {
 }
 
 class _TenantScreenState extends State<TenantScreen> {
+  bool toBeRefreshed = false;
+  @override
+  void initState() {
+    toBeRefreshed = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     AppSettings appSettings = context.watch<AppSettings>();
@@ -29,7 +37,7 @@ class _TenantScreenState extends State<TenantScreen> {
     return FutureBuilder<List<Tenant>>(
         future: getAllTenants(appSettings, jwt, context),
         builder: (context, AsyncSnapshot<List<Tenant>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState != ConnectionState.done) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData) {
             return Scaffold(
@@ -55,9 +63,9 @@ class _TenantScreenState extends State<TenantScreen> {
     try {
       List<Widget> listTenantCards = <Widget>[];
       for (var counter = 0; counter < tenants.length; counter++) {
-        listTenantCards.add(TenantCard(tenant: tenants[counter], addNew: false));
+        listTenantCards.add(TenantCard(tenant: tenants[counter], addNew: false, refresh: refresh));
       }
-      listTenantCards.add(TenantCard(tenant: Tenant("_", S.of(context).tenant_add_button), addNew: true));
+      listTenantCards.add(TenantCard(tenant: Tenant("_", S.of(context).tenant_add_button,'PublicAdmin'), addNew: true, refresh: refresh));
       return GridView.count(
         crossAxisCount: crossAxisCount,
         padding: const EdgeInsets.all(5.0),
@@ -66,5 +74,11 @@ class _TenantScreenState extends State<TenantScreen> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  refresh() {
+    setState(() {
+      toBeRefreshed = !toBeRefreshed;
+    });
   }
 }

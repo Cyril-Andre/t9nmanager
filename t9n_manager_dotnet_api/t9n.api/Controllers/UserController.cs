@@ -92,7 +92,7 @@ namespace t9n.api.Controllers
                 {
                     if (!string.IsNullOrEmpty(reason)) // when password is wrong, reason remains empty
                     {
-                        return Unauthorized(new ApiMessage(httpStatus: 403, message: "Login failed", moreInfo: reason));
+                        return Unauthorized(new ApiMessage(httpStatus: 401, message: "Login failed", moreInfo: reason));
                     }
                     return BadRequest(new ApiMessage (httpStatus: 400, message: "Login failed"));
                 }
