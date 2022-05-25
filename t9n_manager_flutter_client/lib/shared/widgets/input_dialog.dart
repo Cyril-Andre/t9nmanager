@@ -18,7 +18,7 @@ class InputDialog extends StatefulWidget {
       required this.callToActionIcon,
       required this.title,
       required this.message,
-      String? this.toolTip,
+      this.toolTip,
       required this.callBack,
       this.keyboardType})
       : super(key: key);

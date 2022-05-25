@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
 import 'package:t9n_manager_flutter_client/shared/alert.dart';
 import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
-import 'package:t9n_manager_flutter_client/shared/token_helper.dart';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_settings.dart';
 import '../../../shared/models/api_exception.dart';

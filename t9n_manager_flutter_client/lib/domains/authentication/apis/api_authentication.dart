@@ -7,7 +7,6 @@ import 'package:t9n_manager_flutter_client/domains/authentication/models/user_re
 import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
 
 import '../../../generated/l10n.dart';
-import '../../../shared/models/api_exception.dart';
 import '../../../shared/models/api_message.dart';
 import '../models/user_login_model.dart';
 import '../models/user_registration_model.dart';
