@@ -14,8 +14,8 @@ namespace t9n.api.model.extension
                 FirstName = dbUser.Firstname,
                 LastName = dbUser.Lastname,
                 UserName = dbUser.UserName,
-                UserEmail = dbUser.UserEmail,
-                UserBirthDate = dbUser.UserBirthdate,
+                UserEmail = dbUser.Email,
+                UserBirthDate = dbUser.Birthdate,
                 UserTenants = dbUser.Tenants.ToTenantsList()
             };
             return user;
@@ -31,8 +31,8 @@ namespace t9n.api.model.extension
                     FirstName=dbUser.Firstname,
                     LastName=dbUser.Lastname,
                     UserName = dbUser.UserName,
-                    UserEmail = dbUser.UserEmail,
-                    UserBirthDate = dbUser.UserBirthdate,
+                    UserEmail = dbUser.Email,
+                    UserBirthDate = dbUser.Birthdate,
                     UserTenants = dbUser.Tenants.ToTenantsList()
                 };
                 list.Add(user);
@@ -44,8 +44,8 @@ namespace t9n.api.model.extension
             if (dbTenant == null) return null;
             var tenant = new Tenant
             {
-                TenantKey = dbTenant.TenantInternalId,
-                TenantName = dbTenant.TenantName,
+                TenantKey = dbTenant.InternalId,
+                TenantName = dbTenant.Name,
                 AdminUserName = dbTenant.AdminUserName
             };
             return tenant;
@@ -59,8 +59,8 @@ namespace t9n.api.model.extension
             {
                 Tenant tenant = new Tenant
                 {
-                    TenantKey = t.TenantInternalId,
-                    TenantName = t.TenantName,
+                    TenantKey = t.InternalId,
+                    TenantName = t.Name,
                     AdminUserName=t.AdminUserName
                 };
                 list.Add(tenant);

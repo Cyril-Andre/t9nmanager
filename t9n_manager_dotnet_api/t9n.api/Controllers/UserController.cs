@@ -50,16 +50,16 @@ namespace t9n.api.Controllers
                 var dbUser = userRegistrationModel.ToDatabase();
                 if (userRegistrationModel.TenantId != null)
                 {
-                    var dbTenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == userRegistrationModel.TenantId);
+                    var dbTenant = _dbContext.Tenants.FirstOrDefault(t => t.InternalId == userRegistrationModel.TenantId);
                     if (dbTenant!=null)
                         dbUser.Tenants.Add(dbTenant);
                 }
                 _dbContext.Users.Add(dbUser);
                 //Check if an invitation is pending
-                var invitations = _dbContext.Invitations.Where(i=>i.UserEmail.ToLower()==dbUser.UserEmail.ToLower()).ToList();
+                var invitations = _dbContext.Invitations.Where(i=>i.UserEmail.ToLower()==dbUser.Email.ToLower()).ToList();
                 foreach(DbInvitation invit in invitations)
                 {
-                    var tenant = _dbContext.Tenants.FirstOrDefault(t => t.TenantInternalId == invit.TenantInternalId);
+                    var tenant = _dbContext.Tenants.FirstOrDefault(t => t.InternalId == invit.TenantInternalId);
                     if (tenant != null)
                     {
                         dbUser.Tenants.Add(tenant);
@@ -68,7 +68,7 @@ namespace t9n.api.Controllers
                     }
                 }
                 _dbContext.SaveChanges();
-                CommunicationHelper.SendConfirmationMail(userRegistrationModel.UserEmail,$"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.UserInternalId:D}",_appSettings.Value.TemplatesPath,"en");
+                CommunicationHelper.SendConfirmationMail(userRegistrationModel.UserEmail,$"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.InternalId:D}",_appSettings.Value.TemplatesPath,"en");
                 return Ok(new ApiMessage (httpStatus: 200, message: $"User is registered with a {reason} password"));
             }
             catch (Exception ex)
@@ -116,7 +116,7 @@ namespace t9n.api.Controllers
             try
             {
                 Guid reference = Guid.Parse(o);
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserInternalId == reference);
+                var user = _dbContext.Users.FirstOrDefault(u => u.InternalId == reference);
                 if (user == null) return NotFound(new ApiMessage(httpStatus: 404, message: "User unknown."));
                 user.UserEmailValidated = true;
                 _dbContext.SaveChanges();
@@ -136,7 +136,7 @@ namespace t9n.api.Controllers
             {
                 if (userResetPasswordModel == null || String.IsNullOrEmpty(userResetPasswordModel.UserEmail))
                     return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid"));
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                var user = _dbContext.Users.FirstOrDefault(u => u.Email == userResetPasswordModel.UserEmail);
                 if (user == null)
                 {
                     return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
@@ -144,7 +144,7 @@ namespace t9n.api.Controllers
                 string otp = OtpProvider.GenerateOtp(6, true);
                 user.ResetPasswordOtp = otp;
                 _dbContext.SaveChanges();
-                CommunicationHelper.SendResetPasswordMail(user.UserEmail,user.UserName, otp, _appSettings.Value.TemplatesPath, "en");
+                CommunicationHelper.SendResetPasswordMail(user.Email,user.UserName, otp, _appSettings.Value.TemplatesPath, "en");
                 return Ok(new ApiMessage(httpStatus: 200, message: $"Reset password OTP sent"));
             }
             catch (Exception ex)
@@ -166,7 +166,7 @@ namespace t9n.api.Controllers
                 {
                     return BadRequest(new ApiMessage(httpStatus: 400, message: "User email is not valid",moreInfo:reason));
                 }
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserEmail == userResetPasswordModel.UserEmail);
+                var user = _dbContext.Users.FirstOrDefault(u => u.Email == userResetPasswordModel.UserEmail);
                 if (user == null)
                 {
                     return NotFound(new ApiMessage(httpStatus: 404, message: $"Cannot find user with email {userResetPasswordModel.UserEmail}"));
