@@ -2,7 +2,7 @@ class ApiMessage {
   int httpStatus = 200;
   String message = "";
   String moreInfo = "";
-  dynamic? value;
+  dynamic value;
 
   ApiMessage(this.httpStatus, this.message, this.moreInfo, this.value);
 

@@ -85,7 +85,7 @@ class _TenantCardState extends State<TenantCard> {
                         title: S.of(context).tenant_card_add_tenant_title,
                         message: S.of(context).tenant_card_add_tenant_message,
                         toolTip: S.of(context).tenant_card_add_tenant_tooltip,
-                        callBack: () => onAddTenant(appSettings, jwt, context)),
+                        callBack: () async => await onAddTenant(appSettings, jwt, context)),
                   if (isAdmin)
                     InputDialog(
                         controller: inputDialogController,
@@ -110,7 +110,7 @@ class _TenantCardState extends State<TenantCard> {
                         title: S.of(context).tenant_card_leave_tenant_title,
                         message: S.of(context).tenant_card_leave_tenant_message,
                         toolTip: S.of(context).tenant_card_leave_tenant_tooltip,
-                        callBack: () => onDelete(appSettings, jwt, context)),
+                        callBack: () async => await onDelete(appSettings, jwt, context)),
                 ],
               )
             ],
@@ -125,14 +125,14 @@ class _TenantCardState extends State<TenantCard> {
     Navigator.pop(context);
   }
 
-  onDelete(AppSettings appSettings, String jwt, BuildContext context) {
-    deleteTenant(appSettings, jwt, context, widget.tenant);
+  onDelete(AppSettings appSettings, String jwt, BuildContext context) async {
+    await deleteTenant(appSettings, jwt, context, widget.tenant);
     widget.refresh();
   }
 
-  onAddTenant(AppSettings appSettings, String jwt, BuildContext context) {
+  onAddTenant(AppSettings appSettings, String jwt, BuildContext context) async {
     String tenantName = inputDialogController.value;
-    createTenant(appSettings, jwt, context, tenantName);
+    await createTenant(appSettings, jwt, context, tenantName);
     widget.refresh();
   }
 

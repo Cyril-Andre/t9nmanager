@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
+
 
 alert(String title, String message, String buttonLabel, String newRouteName, BuildContext context) {
   return AlertDialog(

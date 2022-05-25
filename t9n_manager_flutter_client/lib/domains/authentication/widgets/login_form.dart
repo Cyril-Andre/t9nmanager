@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/authentication/apis/api_authentication.dart';
 import 'package:t9n_manager_flutter_client/domains/authentication/models/user_login_model.dart';
-import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../shared/app_state_notifier.dart';
@@ -24,7 +23,6 @@ class _LoginFormState extends State<LoginForm> {
   bool _showPassword = false;
   @override
   Widget build(BuildContext context) {
-    AppSettings appSettings = context.watch<AppSettings>();
     double width = MediaQuery.of(context).size.width > context.watch<AppState>().screenMaxSize ? context.watch<AppState>().screenMaxSize : MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Center(
