@@ -8,18 +8,14 @@ using System.Threading.Tasks;
 
 namespace t9n.DAL
 {
-    [Table("Tenants")]
-    public class DbTenant
+    [Table("Projects")]
+    public class DbProject
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid InternalId { get; set; }
         public string Name { get; set; }
-
-        public string AdminUserName { get; set; }
-        public List<DbUser> Users { get; set; }=new List<DbUser>();
-        public List<DbProject> Projects { get; set; }=new List<DbProject>();
- 
+        public DbTenant Tenant { get; set; }
+        public List<DbUser> Users { get; set; }= new List<DbUser>();
     }
-
 }

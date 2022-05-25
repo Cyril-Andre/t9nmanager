@@ -19,10 +19,10 @@ namespace t9n.api.model.extension
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 UserName = user.UserName,
-                UserEmail = user.UserEmail,
+                Email = user.UserEmail,
                 UserPasswordHash = ByteConverter.GetHexString(passwordHashContainer.HashedPassword) ,//user.UserPassword,
                 Salt = ByteConverter.GetHexString(passwordHashContainer.Salt),
-                UserBirthdate = user.UserBirthDate
+                Birthdate = user.UserBirthDate
             };
             return dbUser;
         }
@@ -31,7 +31,7 @@ namespace t9n.api.model.extension
         {
                 var dbUser = context.Users.FirstOrDefault(u =>
                     user.UserName.ToLower() == u.UserName.ToLower() ||
-                    user.UserEmail.ToLower() == u.UserEmail.ToLower());
+                    user.UserEmail.ToLower() == u.Email.ToLower());
                 if (dbUser == null)
                 {
                     moreInfo = "";

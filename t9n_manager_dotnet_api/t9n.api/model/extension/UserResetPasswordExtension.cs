@@ -10,7 +10,7 @@ namespace t9n.api.model.extension
         public static DbUser ToDatabase(this UserResetPasswordModel userResetPasswordModel, t9nDbContext context)
         {
             var passwordHashContainer = Security.PasswordHashProvider.CreateHash(userResetPasswordModel.UserPassword);
-            var dbUser = context.Users.FirstOrDefault(u => userResetPasswordModel.UserEmail.ToLower() == u.UserEmail.ToLower());
+            var dbUser = context.Users.FirstOrDefault(u => userResetPasswordModel.UserEmail.ToLower() == u.Email.ToLower());
             dbUser.UserPasswordHash = ByteConverter.GetHexString(passwordHashContainer.HashedPassword);
             dbUser.Salt = ByteConverter.GetHexString(passwordHashContainer.Salt);
             dbUser.ResetPasswordOtp = null;
