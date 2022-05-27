@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:t9n_manager_flutter_client/domains/project/screens/project_screen.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
 
 import 'domains/authentication/screens/forgot_password_screen.dart';
 import 'domains/arb_management/screens/home_screen.dart';
@@ -17,13 +19,10 @@ class t9nManagerApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var tenantPublic = context.watch<AppSettings>().publicTenant;
+    context.read<AppState>().setTenant(tenantPublic);
     return MaterialApp(
-      localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
+      localizationsDelegates: const [S.delegate, GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
       supportedLocales: S.delegate.supportedLocales,
       title: 't9n Manager',
       theme: ThemeData(
@@ -39,13 +38,12 @@ class t9nManagerApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => context.watch<AppState>().isLoggedIn
-            ? const HomeScreen()
-            : const LoginScreen(),
+        '/': (context) => context.watch<AppState>().isLoggedIn ? const HomeScreen() : const LoginScreen(),
         '/relog': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/forgotpassword': (context) => const ForgotPasswordScreen(),
-        '/tenant':(context) => const TenantScreen(),
+        '/tenant': (context) => const TenantScreen(),
+        '/project': (context) => const ProjectScreen(),
       },
       initialRoute: "/",
     );

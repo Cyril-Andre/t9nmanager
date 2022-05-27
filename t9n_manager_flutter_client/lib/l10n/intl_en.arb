@@ -92,6 +92,11 @@
     "tenant_card_leave_tenant_message":"Are you sure you want to leave this tenant?",   
     "tenant_card_leave_tenant_tooltip":"Leave tenant",
     
+    "project_add_button":"New project",
+    "project_card_add_project_title":"Add project",
+    "project_card_add_project_message":"Enter tenant name",   
+    "project_card_add_project_tooltip":"Add tenant",
+
     "exception_message_userunknown":"Sorry, we cannot find you as a user.",
     "exception_message_wrongtoken":"Authorization token invalid.",
     "exception_message_unexpected":"An unexpected error occured.",

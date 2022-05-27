@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_state_notifier.dart';
@@ -16,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Tenant tenant = context.watch<AppState>().selectedTenant;
-    String project = context.watch<AppState>().selectedProject;
+    Project project = context.watch<AppState>().selectedProject;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).title),
@@ -25,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Selected tenant/project : ${tenant.tenantName}/$project"),
+            child: Text("Selected tenant/project : ${tenant.name}/${project.name}"),
           ),
           const Home(),
         ],

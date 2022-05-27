@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 
 class AppState with ChangeNotifier {
@@ -9,7 +10,7 @@ class AppState with ChangeNotifier {
   bool isLoggedIn = false;
   String jwt = '';
   Tenant selectedTenant = Tenant("_", "Public","PublicAdmin");
-  String selectedProject = "(none)";
+  Project selectedProject = Project("_", "(none)");
 
   void logIn() {
     isLoggedIn = true;
@@ -33,6 +34,10 @@ class AppState with ChangeNotifier {
 
   void setTenant(Tenant tenant) {
     selectedTenant = tenant;
+    notifyListeners();
+  }
+  void setProject(Project project) {
+    selectedProject = project;
     notifyListeners();
   }
 }
