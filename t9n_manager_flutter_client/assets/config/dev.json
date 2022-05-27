@@ -1,3 +1,8 @@
 {
-    "apiUrl":"http://192.168.0.150:45457/api/"
+    "apiUrl":"http://192.168.0.150:45457/api/",
+    "publicTenant":{
+        "id":"1af0e668-086f-4a3c-8196-3231f21f6636",
+        "name":"Public",
+        "adminUserName":"t9nAdmin"
+    }
 }

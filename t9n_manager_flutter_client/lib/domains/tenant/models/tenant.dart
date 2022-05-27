@@ -1,14 +1,14 @@
 class Tenant {
-  String tenantKey = '';
-  String tenantName = '';
+  String id = '';
+  String name = '';
   String adminUserName = '';
-  Tenant(this.tenantKey, this.tenantName, this.adminUserName);
+  Tenant(this.id, this.name, this.adminUserName);
 
   factory Tenant.fromJson(Map<String, dynamic> json) {
-    return Tenant(json['tenantKey'], json['tenantName'], json['adminUserName']);
+    return Tenant(json['id'], json['name'], json['adminUserName']);
   }
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'tenantKey': tenantKey, 'tenantName': tenantName, 'adminUserName':adminUserName};
+    return <String, dynamic>{'id': id, 'name': name, 'adminUserName': adminUserName};
   }
 }
