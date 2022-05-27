@@ -12,22 +12,14 @@ namespace t9n.DAL
         public DbSet<DbArbResourceEntryCollection> ArbCollection { get; set; }
         //public DbSet<DbUsersInTenant> UsersInTenant { get; set; }
         public DbSet<DbInvitation> Invitations { get; set; }
+        public DbSet<DbProject> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*
-            modelBuilder.Entity<DbInvitation>().HasKey(u => new
-            {
-                u.TenantInternalId,
-                u.UserEmail
-            });
-            modelBuilder.Entity<DbUsersInTenant>().HasKey(u => new
-            {
-                u.UserInternalId,
-                u.TenantInternalId
-            });
-            */
+            Guid publicTenantGuid = Guid.Parse("1af0e668-086f-4a3c-8196-3231f21f6636");
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<DbTenant>().HasData(new DbTenant { InternalId = publicTenantGuid, AdminUserName = "t9nAdmin", Name = "Public" });
+
         }
     }
 }

@@ -60,22 +60,27 @@ namespace t9n.api.Controllers
         }
 
 
-        [HttpPost("arb")]
+        [HttpPost( "arb" )]
         public IActionResult PostArbFile(IFormFile formFile)
         {
-            if (formFile == null || formFile.Length == 0) return StatusCode(400);
+            if ( formFile == null || formFile.Length == 0 )
+            {
+                return StatusCode( 400 );
+            }
 
             var stringBuilder = new StringBuilder();
-                using (var reader = new StreamReader(formFile.OpenReadStream()))
+            using ( var reader = new StreamReader( formFile.OpenReadStream() ) )
+            {
+                while ( reader.Peek() >= 0 )
                 {
-                    while (reader.Peek() >= 0)
-                        stringBuilder.AppendLine(reader.ReadLine());
+                    stringBuilder.AppendLine( reader.ReadLine() );
                 }
+            }
             string json = stringBuilder.ToString();
             var options = new JsonSerializerOptions();
-            options.Converters.Add(new ArbResourceCollectionJsonConverter());
-            ArbResourceCollection arbResourceCollection = JsonSerializer.Deserialize<ArbResourceCollection>(json,options);
+            options.Converters.Add( new ArbResourceCollectionJsonConverter() );
+            ArbResourceCollection arbResourceCollection = JsonSerializer.Deserialize<ArbResourceCollection>( json, options );
             return Ok();
-                }
+        }
     }
 }

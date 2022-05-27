@@ -22,7 +22,7 @@ namespace t9n.DAL
         public bool UserEmailValidated { get; set; }
         public DateTime Birthdate { get; set; }
         public string Salt { get; set; }
-        public string? ResetPasswordOtp { get; set; }
+        public string ResetPasswordOtp { get; set; }
         public List<DbTenant> Tenants { get; set; }= new List<DbTenant>();
         public List<DbProject> Projects { get; set; } = new List<DbProject>();
 

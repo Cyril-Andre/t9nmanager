@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace t9n.api.Controllers
     [ApiController]
     public class TenantController : ControllerBase
     {
-        private Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly AppSettings _appSettings;
         private readonly t9nDbContext _dbContext;
 
@@ -41,12 +41,18 @@ namespace t9n.api.Controllers
             {
                 var claims = User.Claims;
                 var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
-                if (string.IsNullOrEmpty(userName))
-                    return BadRequest(new ApiMessage(400, message: "Token invalid"));
-                var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName)?.ToUser();
+                if (String.IsNullOrEmpty(userName))
+            {
+               return BadRequest(new ApiMessage(400, message: "Token invalid"));
+            }
+
+            var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName)?.ToUser();
                 if (user == null)
-                    return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-                ApiMessage result = new ApiMessage(httpStatus:200, message:"Success"){Value = user.UserTenants };
+            {
+               return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
+            }
+
+            ApiMessage result = new ApiMessage(httpStatus:200, message:"Success"){Value = user.UserTenants };
                 _logger.Trace($"Get Tenant ==> {user.UserTenants.Count}");
                 return Ok(result);
             }
@@ -57,22 +63,32 @@ namespace t9n.api.Controllers
         }
 
         [HttpPost("create/{tenantName}")]
-        [ProducesResponseType(typeof(ApiMessage), 200)]
-        [ProducesResponseType(typeof(ApiMessage), 404)]
-        [ProducesResponseType(typeof(ApiMessage), 400)]
-        [ProducesResponseType(typeof(ApiMessage), 500)]
+        [ProducesResponseType( typeof( ApiMessage ), 200 )]
+        [ProducesResponseType( typeof( ApiMessage ), 400 )]
+        [ProducesResponseType( typeof( ApiMessage ), 404 )]
+        [ProducesResponseType( typeof( ApiMessage ), 409 )]
+        [ProducesResponseType( typeof( ApiMessage ), 500 )]
         public IActionResult CreateTenant(string tenantName)
         {
             try
             {
                 var claims = User.Claims;
                 var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
-                if (string.IsNullOrEmpty(userName))
-                    return BadRequest(new ApiMessage(400, message: "Token invalid"));
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserName == userName);
+                if ( String.IsNullOrEmpty(userName))
+            {
+               return BadRequest(new ApiMessage(400, message: "Token invalid"));
+            }
+
+            var user = _dbContext.Users.FirstOrDefault(u => u.UserName == userName);
                 if (user == null)
-                    return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-                DbTenant dbTenant = new DbTenant
+            {
+               return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
+            }
+                if ( _dbContext.Tenants.FirstOrDefault( t => t.Name.ToLower() == tenantName.ToLower() ) != null )
+                {
+                    return Conflict( new ApiMessage( 409, $"Tenant {tenantName} cannot be created.", "Duplicate" ) );
+                }
+            DbTenant dbTenant = new DbTenant
                 {
                     InternalId = Guid.NewGuid(),
                     Name = tenantName,
@@ -91,41 +107,50 @@ namespace t9n.api.Controllers
             }
         }
 
-        [HttpDelete("{tenantKey}")]
-        [ProducesResponseType(typeof(ApiMessage), 200)]
-        [ProducesResponseType(typeof(ApiMessage), 404)]
-        [ProducesResponseType(typeof(ApiMessage), 400)]
-        [ProducesResponseType(typeof(ApiMessage), 500)]
-        public IActionResult DeleteUserTenants(string tenantKey)
+        [HttpDelete( "{tenantKey}" )]
+        [ProducesResponseType( typeof( ApiMessage ), 200 )]
+        [ProducesResponseType( typeof( ApiMessage ), 404 )]
+        [ProducesResponseType( typeof( ApiMessage ), 400 )]
+        [ProducesResponseType( typeof( ApiMessage ), 500 )]
+        public IActionResult DeleteUserTenants( string tenantKey )
         {
             try
             {
                 var claims = User.Claims;
-                var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
-                if (string.IsNullOrEmpty(userName))
-                    return BadRequest(new ApiMessage(400, message: "Token invalid"));
-                var user = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName);
-                if (user == null)
-                    return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-                var tenant = user.Tenants.Find(t => t.InternalId.ToString("D") == tenantKey);
-                if (tenant==null)
-                    return NotFound(new ApiMessage(404, message: $"Cannot find tenant {tenantKey} in the tenants' list of {user.UserName}"));
-                if (tenant.AdminUserName == user.UserName)
+                var userName = claims.FirstOrDefault( c => c.Type.Contains( "name" ) )?.Value;
+                if ( String.IsNullOrEmpty( userName ) )
                 {
-                    var allUsers = _dbContext.Users.Include(u=>u.Tenants).Where(u => u.Tenants.Contains(tenant)).ToList();
-                    foreach (var dbUser in allUsers)
+                    return BadRequest( new ApiMessage( 400, message: "Token invalid" ) );
+                }
+
+                var user = _dbContext.Users.Include( user => user.Tenants ).FirstOrDefault( u => u.UserName == userName );
+                if ( user == null )
+                {
+                    return NotFound( new ApiMessage( 404, message: $"Cannot find user {userName}" ) );
+                }
+
+                var tenant = user.Tenants.Find( t => t.InternalId.ToString( "D" ) == tenantKey );
+                if ( tenant == null )
+                {
+                    return NotFound( new ApiMessage( 404, message: $"Cannot find tenant {tenantKey} in the tenants' list of {user.UserName}" ) );
+                }
+
+                if ( tenant.AdminUserName == user.UserName )
+                {
+                    var allUsers = _dbContext.Users.Include( u => u.Tenants ).Where( u => u.Tenants.Contains( tenant ) ).ToList();
+                    foreach ( var dbUser in allUsers )
                     {
-                        dbUser.Tenants.Remove(tenant);
+                        dbUser.Tenants.Remove( tenant );
                     }
                 }
-                _dbContext.Tenants.Remove(tenant);
-                user.Tenants.Remove(tenant);
+                _dbContext.Tenants.Remove( tenant );
+                user.Tenants.Remove( tenant );
                 _dbContext.SaveChanges();
-                return Ok(new ApiMessage(200,"Success","Tenant successfuly removed"));
+                return Ok( new ApiMessage( 200, "Success", "Tenant successfuly removed" ) );
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                return StatusCode(500, new ApiMessage(500, "Unexpected error", ex.Message));
+                return StatusCode( 500, new ApiMessage( 500, "Unexpected error", ex.Message ) );
             }
         }
 
@@ -137,9 +162,9 @@ namespace t9n.api.Controllers
         [ProducesResponseType(typeof(ApiMessage), 500)]
         public IActionResult InviteUser([FromBody]Invitation invitation)
         {
-            string tenantKey = invitation.tenant.TenantKey.ToString();
+            string tenantKey = invitation.tenant.Id.ToString();
             string userEmail = invitation.userEmail;
-            Guid tenantGuid = invitation.tenant.TenantKey;
+            Guid tenantGuid = invitation.tenant.Id;
 
             var tenant = _dbContext.Tenants.FirstOrDefault(t => t.InternalId == tenantGuid);
             if (tenant == null)
@@ -148,12 +173,18 @@ namespace t9n.api.Controllers
             }
             var claims = User.Claims;
             var userName = claims.FirstOrDefault(c => c.Type.Contains("name"))?.Value;
-            if (string.IsNullOrEmpty(userName))
-                return BadRequest(new ApiMessage(400, message: "Token invalid"));
-            var currentUser = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName);
+            if (String.IsNullOrEmpty(userName))
+         {
+            return BadRequest(new ApiMessage(400, message: "Token invalid"));
+         }
+
+         var currentUser = _dbContext.Users.Include(user => user.Tenants).FirstOrDefault(u => u.UserName == userName);
             if (currentUser == null)
-                return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
-            var invitedUser = _dbContext.Users.FirstOrDefault(u=>u.Email.ToLower()==userEmail.ToLower());
+         {
+            return NotFound(new ApiMessage(404, message: $"Cannot find user {userName}"));
+         }
+
+         var invitedUser = _dbContext.Users.FirstOrDefault(u=>u.Email.ToLower()==userEmail.ToLower());
             if (invitedUser == null)
             {
                 var invit = _dbContext.Invitations.FirstOrDefault(i=>i.UserEmail==userEmail && i.TenantInternalId==tenantGuid);

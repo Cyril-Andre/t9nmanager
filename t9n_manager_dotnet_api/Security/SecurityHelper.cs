@@ -9,8 +9,15 @@ namespace Security
         {
             string otp = "";
             string[] digits;
-            if (numericOnly) digits = new string[] { "0", "1","2","3","4","5","6","7","8","9" };
-            else digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            if (numericOnly)
+            {
+                digits = new string[] { "0", "1","2","3","4","5","6","7","8","9" };
+            }
+            else
+            {
+                digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            }
+
             Random rand = new Random();
             for (int counter=0; counter<numberDigits; counter++)
             {
@@ -97,7 +104,11 @@ namespace Security
         /// <returns><c>true</c> if they are the same, otherwise <c>false</c></returns>
         public static bool CompareHashes(byte[] array1, byte[] array2)
         {
-            if (array1.Length != array2.Length) return false;
+            if (array1.Length != array2.Length)
+            {
+                return false;
+            }
+
             return !array1.Where((t, i) => t != array2[i]).Any();
         }
 
