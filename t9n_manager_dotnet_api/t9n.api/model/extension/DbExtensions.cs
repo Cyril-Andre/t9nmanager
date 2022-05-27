@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using arb;
+using System.Collections.Generic;
 using t9n.DAL;
 using userManagement;
 
@@ -8,7 +9,11 @@ namespace t9n.api.model.extension
     {
         public static User ToUser(this DbUser dbUser)
         {
-            if (dbUser == null) return null;
+            if ( dbUser == null )
+            {
+                return null;
+            }
+
             var user = new User
             {
                 FirstName = dbUser.Firstname,
@@ -20,32 +25,40 @@ namespace t9n.api.model.extension
             };
             return user;
         }
-        public static List<User> ToUsersList(this List<DbUser> listDbUser, bool fromTenant)
+        public static List<User> ToUsersList(this List<DbUser> listDbUser)
         {
-            if (listDbUser == null) return null;
+            if ( listDbUser == null )
+            {
+                return null;
+            }
+
             List<User> list = new List<User>();
-            foreach (DbUser dbUser in listDbUser)
+            foreach ( DbUser dbUser in listDbUser )
             {
                 var user = new User
                 {
-                    FirstName=dbUser.Firstname,
-                    LastName=dbUser.Lastname,
+                    FirstName = dbUser.Firstname,
+                    LastName = dbUser.Lastname,
                     UserName = dbUser.UserName,
                     UserEmail = dbUser.Email,
                     UserBirthDate = dbUser.Birthdate,
                     UserTenants = dbUser.Tenants.ToTenantsList()
                 };
-                list.Add(user);
+                list.Add( user );
             }
             return list;
         }
         public static Tenant ToTenant(this DbTenant dbTenant)
         {
-            if (dbTenant == null) return null;
+            if ( dbTenant == null )
+            {
+                return null;
+            }
+
             var tenant = new Tenant
             {
-                TenantKey = dbTenant.InternalId,
-                TenantName = dbTenant.Name,
+                Id = dbTenant.InternalId,
+                Name = dbTenant.Name,
                 AdminUserName = dbTenant.AdminUserName
             };
             return tenant;
@@ -53,20 +66,64 @@ namespace t9n.api.model.extension
 
         public static List<Tenant> ToTenantsList(this List<DbTenant> listDbTenant)
         {
-            if (listDbTenant == null) return null;
+            if ( listDbTenant == null )
+            {
+                return null;
+            }
+
             List<Tenant> list = new List<Tenant>();
-            foreach (DbTenant t in listDbTenant)
+            foreach ( DbTenant t in listDbTenant )
             {
                 Tenant tenant = new Tenant
                 {
-                    TenantKey = t.InternalId,
-                    TenantName = t.Name,
-                    AdminUserName=t.AdminUserName
+                    Id = t.InternalId,
+                    Name = t.Name,
+                    AdminUserName = t.AdminUserName
                 };
-                list.Add(tenant);
+                list.Add( tenant );
 
             }
             return list;
         }
+
+        public static Project ToProject(this DbProject dbProject)
+        {
+            if ( dbProject == null )
+            {
+                return null;
+            }
+
+            var project = new Project
+            {
+                Id = dbProject.InternalId,
+                Name = dbProject.Name,
+                Tenant = dbProject.Tenant.ToTenant(),
+                Users = dbProject.Users.ToUsersList()
+            };
+            return project;
+        }
+
+        public static List<Project> ToProjectsList(this List<DbProject> listDbProjects)
+        {
+            if ( listDbProjects == null )
+            {
+                return null;
+            }
+
+            List<Project> list = new List<Project>();
+            foreach ( DbProject dbProject in listDbProjects )
+            {
+                var project = new Project
+                {
+                    Id = dbProject.InternalId,
+                    Name = dbProject.Name,
+                    Tenant = dbProject.Tenant.ToTenant(),
+                    Users = dbProject.Users.ToUsersList()
+                };
+                list.Add( project );
+            }
+            return list;
+        }
+
     }
 }

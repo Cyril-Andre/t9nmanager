@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "Security\Securi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Communication\Communication.csproj", "{E1C09C83-8F27-4D7A-83C2-543AB1C325F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t9nManagerUnitTests", "t9nManagerUnitTests\t9nManagerUnitTests.csproj", "{42C66D97-D4BF-4F46-9FFF-0B116B463F1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "t9nManagerUnitTests", "t9nManagerUnitTests\t9nManagerUnitTests.csproj", "{42C66D97-D4BF-4F46-9FFF-0B116B463F1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{D371DEB5-35EA-4009-8EEB-0845ACD31D04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D9D20374-F1BF-4739-AEF5-E62BB0FB33E4} = {D371DEB5-35EA-4009-8EEB-0845ACD31D04}
+		{DED0FEC3-05E2-401C-9B17-EA2EDFE8B00B} = {D371DEB5-35EA-4009-8EEB-0845ACD31D04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7D23C412-BF72-4EEB-AF94-D70D23C514DA}

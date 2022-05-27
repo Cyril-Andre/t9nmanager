@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using t9n.DAL;
 
@@ -11,9 +12,10 @@ using t9n.DAL;
 namespace t9n.DAL.Migrations
 {
     [DbContext(typeof(t9nDbContext))]
-    partial class t9nDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220527102619_AddProjects2")]
+    partial class AddProjects2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using userManagement;
 
 namespace arb
 {
-    public class ArbResourceCollection
-    {
-        public Tenant Tenant { get; set; }
-        public string Locale { get; set; }
-        public string Context { get; set; }
-        public List<ArbResourceEntry> ArbEntries { get; set; } = new List<ArbResourceEntry>();
-
-    }
     public class ArbResourceEntry
     {
         private Guid _internalId;
@@ -30,14 +20,5 @@ namespace arb
         public ArbReourceEntryAttribute Screen { get; set; } = new ArbReourceEntryAttribute("screen");
 
 
-    }
-
-
-    public class ArbReourceEntryAttribute
-    {
-        private string _attributeName="";
-        public ArbReourceEntryAttribute(string attributeName) { _attributeName = attributeName; }
-        public string AttributeName => _attributeName;
-        public string AttributeValue { get; set; }
     }
 }

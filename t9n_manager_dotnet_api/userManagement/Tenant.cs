@@ -8,8 +8,8 @@ namespace userManagement
 {
     public class Tenant
     {
-        public Guid TenantKey { get; set; } //Internal Id. Necessary for allowing a user to access Tenant data 
-        public string TenantName { get; set; }
+        public Guid Id { get; set; } //Internal Id. Necessary for allowing a user to access Tenant data 
+        public string Name { get; set; }
 
         public string AdminUserName { get; set; }
     }

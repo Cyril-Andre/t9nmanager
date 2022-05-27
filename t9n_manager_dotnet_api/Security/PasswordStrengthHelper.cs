@@ -61,12 +61,36 @@ namespace Security
         public static PasswordStrength GetPasswordStrength(string password)
         {
             int score = 0;
-            if (String.IsNullOrEmpty(password) || String.IsNullOrEmpty(password.Trim())) return PasswordStrength.Blank;
-            if (HasMinimumLength(password, 5)) score++;
-            if (HasMinimumLength(password, 8)) score++;
-            if (HasUpperCaseLetter(password) && HasLowerCaseLetter(password)) score++;
-            if (HasDigit(password)) score++;
-            if (HasSpecialChar(password)) score++;
+            if (String.IsNullOrEmpty(password) || String.IsNullOrEmpty(password.Trim()))
+            {
+                return PasswordStrength.Blank;
+            }
+
+            if (HasMinimumLength(password, 5))
+            {
+                score++;
+            }
+
+            if (HasMinimumLength(password, 8))
+            {
+                score++;
+            }
+
+            if (HasUpperCaseLetter(password) && HasLowerCaseLetter(password))
+            {
+                score++;
+            }
+
+            if (HasDigit(password))
+            {
+                score++;
+            }
+
+            if (HasSpecialChar(password))
+            {
+                score++;
+            }
+
             return (PasswordStrength)score;
         }
 
@@ -114,12 +138,36 @@ namespace Security
             bool requireUppercase,
             bool requireDigit)
         {
-            if (!HasMinimumLength(password, requiredLength)) return false;
-            if (!HasMinimumUniqueChars(password, requiredUniqueChars)) return false;
-            if (requireNonAlphanumeric && !HasSpecialChar(password)) return false;
-            if (requireLowercase && !HasLowerCaseLetter(password)) return false;
-            if (requireUppercase && !HasUpperCaseLetter(password)) return false;
-            if (requireDigit && !HasDigit(password)) return false;
+            if (!HasMinimumLength(password, requiredLength))
+            {
+                return false;
+            }
+
+            if (!HasMinimumUniqueChars(password, requiredUniqueChars))
+            {
+                return false;
+            }
+
+            if (requireNonAlphanumeric && !HasSpecialChar(password))
+            {
+                return false;
+            }
+
+            if (requireLowercase && !HasLowerCaseLetter(password))
+            {
+                return false;
+            }
+
+            if (requireUppercase && !HasUpperCaseLetter(password))
+            {
+                return false;
+            }
+
+            if (requireDigit && !HasDigit(password))
+            {
+                return false;
+            }
+
             return true;
         }
 

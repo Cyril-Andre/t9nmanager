@@ -32,8 +32,8 @@ namespace t9nManagerUnitTests
                 UserName = "CyrilAndre",
                 UserTenants = new List<Tenant>()
             };
-            user.UserTenants.Add(new Tenant() { TenantKey = Guid.NewGuid(), TenantName = "Public" });
-            user.UserTenants.Add(new Tenant() { TenantKey = Guid.NewGuid(), TenantName = "MyTenant" });
+            user.UserTenants.Add(new Tenant() { Id = Guid.NewGuid(), Name = "Public" });
+            user.UserTenants.Add(new Tenant() { Id = Guid.NewGuid(), Name = "MyTenant" });
             var token = TokenHelper.CreateToken(appSettings, user);
             Assert.AreEqual("ey", token.Substring(0, 2));
         }
@@ -64,8 +64,8 @@ namespace t9nManagerUnitTests
                 UserName = "CyrilAndre",
                 UserTenants = new List<Tenant>()
             };
-            user.UserTenants.Add(new Tenant() { TenantKey = Guid.NewGuid(), TenantName = "Public" });
-            user.UserTenants.Add(new Tenant() { TenantKey = Guid.NewGuid(), TenantName = "MyTenant" });
+            user.UserTenants.Add(new Tenant() { Id = Guid.NewGuid(), Name = "Public" });
+            user.UserTenants.Add(new Tenant() { Id = Guid.NewGuid(), Name = "MyTenant" });
             var token = TokenHelper.CreateToken(appSettings, user); 
             var claims = TokenHelper.ValidateToken(appSettings, token, out var reason);
             Assert.IsNotNull(claims);
