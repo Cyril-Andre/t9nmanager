@@ -363,4 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 /t9n.api/Properties/launchSettings.json
 /t9n.api/appsettings.Development.json
+<<<<<<< HEAD
 .DS_Store
+=======
+
+>>>>>>> 4bca510f04698e3e96fc9489e44e792bfe923128
