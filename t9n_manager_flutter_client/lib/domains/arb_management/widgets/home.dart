@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
           MenuCard(
             cardSize: cardSize,
             title: S.of(context).menu_projects,
+            onPressed:()=> tapMenu(context,'/project'),
           ),
     
         ],
