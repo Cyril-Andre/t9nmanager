@@ -4,7 +4,7 @@ import 'package:t9n_manager_flutter_client/domains/project/apis/api_project.dart
 import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/models/invitation.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
-import 'package:t9n_manager_flutter_client/shared/token_helper.dart';
+import 'package:t9n_manager_flutter_client/shared/helpers/token_helper.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/confirm_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/input_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/spacer.dart';
