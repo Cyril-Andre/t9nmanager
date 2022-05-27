@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
 
 import '../../../shared/app_state_notifier.dart';
 import '../../../shared/widgets/menu_card.dart';
@@ -18,6 +19,7 @@ class _HomeState extends State<Home> {
     double width = MediaQuery.of(context).size.width > context.watch<AppState>().screenMaxSize ? context.watch<AppState>().screenMaxSize : MediaQuery.of(context).size.width;
     double cardSize = context.watch<AppState>().cardSize;
     int crossAxisCount = (width / cardSize).floor();
+    var selectedProject = context.watch<AppState>().selectedProject;
     return Flexible(
       child: GridView.count(
         crossAxisCount: crossAxisCount,
@@ -27,12 +29,16 @@ class _HomeState extends State<Home> {
             cardSize: cardSize,
             title: S.of(context).menu_tenants,
             onPressed:()=> tapMenu(context,'/tenant'),
-          ),
-    
+          ),    
           MenuCard(
             cardSize: cardSize,
             title: S.of(context).menu_projects,
             onPressed:()=> tapMenu(context,'/project'),
+          ),
+          if (selectedProject.name!="(none)")
+          MenuCard(
+            cardSize: cardSize, 
+            title: "Translations"
           ),
     
         ],
