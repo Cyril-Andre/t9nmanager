@@ -1,3 +1,8 @@
 {
-    "apiUrl":"https://109.89.162.133:45455/api/"
+    "apiUrl":"https://109.89.162.133:45455/api/",
+    "publicTenant":{
+        "id":"1af0e668-086f-4a3c-8196-3231f21f6636",
+        "name":"Public",
+        "adminUserName":"t9nAdmin"
+    }
 }

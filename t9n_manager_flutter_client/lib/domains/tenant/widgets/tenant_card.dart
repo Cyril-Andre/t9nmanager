@@ -10,6 +10,7 @@ import 'package:t9n_manager_flutter_client/shared/widgets/spacer.dart';
 import '../../../generated/l10n.dart';
 import '../../../shared/app_settings.dart';
 import '../../../shared/app_state_notifier.dart';
+import '../../project/models/project.dart';
 import '../models/tenant.dart';
 
 class TenantCard extends StatefulWidget {
@@ -45,7 +46,7 @@ class _TenantCardState extends State<TenantCard> {
       height: cardSize,
       child: GestureDetector(
         onTap: () {
-          if (widget.tenant.tenantKey != "_") {
+          if (widget.tenant.id != "_") {
             changeTenant(widget.tenant, context);
           }
         },
@@ -67,7 +68,7 @@ class _TenantCardState extends State<TenantCard> {
                     ),
               verticalSpaceRegular,
               Text(
-                widget.tenant.tenantName,
+                widget.tenant.name,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14),
               ),
@@ -94,8 +95,7 @@ class _TenantCardState extends State<TenantCard> {
                         message: S.of(context).tenant_card_add_user_message,
                         toolTip: S.of(context).tenant_card_add_user_tooltip,
                         callBack: () => onAddUser(appSettings, jwt, context),
-                        keyboardType: TextInputType.emailAddress
-                    ),
+                        keyboardType: TextInputType.emailAddress),
                   if (!widget.addNew)
                     IconButton(
                         tooltip: S.of(context).tenant_card_select_tenant_tooltip,
@@ -122,6 +122,7 @@ class _TenantCardState extends State<TenantCard> {
 
   changeTenant(Tenant tenant, BuildContext context) {
     context.read<AppState>().setTenant(tenant);
+    context.read<AppState>().setProject(Project("_", "(none)"));
     Navigator.pop(context);
   }
 
