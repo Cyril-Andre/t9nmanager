@@ -142,9 +142,12 @@ namespace t9n.api.Controllers
                     {
                         dbUser.Tenants.Remove( tenant );
                     }
+                    _dbContext.Tenants.Remove( tenant );
                 }
-                _dbContext.Tenants.Remove( tenant );
-                user.Tenants.Remove( tenant );
+                else
+                {
+                    user.Tenants.Remove( tenant );
+                }
                 _dbContext.SaveChanges();
                 return Ok( new ApiMessage( 200, "Success", "Tenant successfuly removed" ) );
             }
