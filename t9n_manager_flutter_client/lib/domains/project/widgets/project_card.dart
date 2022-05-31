@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/project/apis/api_project.dart';
-import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
-import 'package:t9n_manager_flutter_client/domains/tenant/models/invitation.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 import 'package:t9n_manager_flutter_client/shared/helpers/token_helper.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/confirm_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/input_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/spacer.dart';
-
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/app_state_notifier.dart';
-import '../models/project.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
 
 class ProjectCard extends StatefulWidget {
   const ProjectCard({Key? key, required this.project, required this.addNew, required this.refresh}) : super(key: key);
@@ -35,7 +32,7 @@ class _ProjectCardState extends State<ProjectCard> {
     var jwt = appState.jwt;
     var currentUser = TokenHelper.parseJwt(jwt)['name'];
     var currentTenant = appState.selectedTenant;
-    Icon icon = const Icon(Icons.abc);
+    Icon icon = const Icon(Icons.factory);
     if (widget.addNew) {
       icon = const Icon(Icons.bookmark_add_outlined);
     } else {
@@ -59,7 +56,7 @@ class _ProjectCardState extends State<ProjectCard> {
             mainAxisSize: MainAxisSize.max,
             children: [
               const Icon(
-                Icons.abc,
+                Icons.factory,
                 size: 30.0,
               ),
               verticalSpaceRegular,

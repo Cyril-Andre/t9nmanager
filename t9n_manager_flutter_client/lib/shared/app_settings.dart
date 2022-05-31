@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../domains/tenant/models/tenant.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 
 class AppSettings with ChangeNotifier {
   final String apiUrl;

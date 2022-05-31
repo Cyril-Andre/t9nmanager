@@ -25,6 +25,12 @@
         "context":"Main menu - Home page",
         "description":"Menu card to access Tenants feature"
     },
+    "menu_arb_management":"ARB Management",
+    "@menu_arb_management":{
+        "type":"text",
+        "context":"Main menu - Home page",
+        "description":"Menu card to access the ARB management feature"
+    },
 
     "login_form_title": "Login",
     "login_form_subtitle":"Log in to your t9n Manager account",

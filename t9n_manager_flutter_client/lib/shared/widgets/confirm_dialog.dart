@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
 
 class ConfirmDialogController extends ChangeNotifier {
   bool confirmed = false;
