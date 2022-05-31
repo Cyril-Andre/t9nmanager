@@ -4,11 +4,10 @@ import 'package:t9n_manager_flutter_client/domains/project/apis/api_project.dart
 import 'package:t9n_manager_flutter_client/domains/project/widgets/project_card.dart';
 import 'package:t9n_manager_flutter_client/shared/alert.dart';
 import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/models/api_exception.dart';
-import '../models/project.dart';
-import '../widgets/project_card.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
+import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
 
 class ProjectScreen extends StatefulWidget {
   const ProjectScreen({Key? key}) : super(key: key);
@@ -44,6 +43,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
             return Scaffold(
               appBar: AppBar(
                 title: Text(S.of(context).title),
+                leading: const Icon(Icons.factory),
               ),
               body: getProjectCards(snapshot.requireData, crossAxisCount),
             );

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/project/screens/project_screen.dart';
-import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
 
-import 'domains/authentication/screens/forgot_password_screen.dart';
-import 'domains/arb_management/screens/home_screen.dart';
-import 'domains/authentication/screens/login_screen.dart';
-import 'domains/authentication/screens/signup_screen.dart';
-import 'domains/tenant/screens/tenant_screen.dart';
-import 'generated/l10n.dart';
-import 'shared/app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/domains/arb_management/screens/arb_management_screen.dart';
+import 'package:t9n_manager_flutter_client/domains/authentication/screens/forgot_password_screen.dart';
+import 'package:t9n_manager_flutter_client/domains/arb_management/screens/home_screen.dart';
+import 'package:t9n_manager_flutter_client/domains/authentication/screens/login_screen.dart';
+import 'package:t9n_manager_flutter_client/domains/authentication/screens/signup_screen.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/screens/tenant_screen.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
 
 // ignore: camel_case_types
 class t9nManagerApp extends StatelessWidget {
@@ -19,9 +19,10 @@ class t9nManagerApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var tenantPublic = context.watch<AppSettings>().publicTenant;
-    context.read<AppState>().setTenant(tenantPublic);
+//    var tenantPublic = context.watch<AppSettings>().publicTenant;
+//    context.read<AppState>().setTenant(tenantPublic);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [S.delegate, GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate],
       supportedLocales: S.delegate.supportedLocales,
       title: 't9n Manager',
@@ -44,6 +45,7 @@ class t9nManagerApp extends StatelessWidget {
         '/forgotpassword': (context) => const ForgotPasswordScreen(),
         '/tenant': (context) => const TenantScreen(),
         '/project': (context) => const ProjectScreen(),
+        '/arb_management':(context)=> const ArbManagementScreen(),
       },
       initialRoute: "/",
     );

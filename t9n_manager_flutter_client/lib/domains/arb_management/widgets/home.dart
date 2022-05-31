@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/generated/l10n.dart';
-import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
-
-import '../../../shared/app_state_notifier.dart';
-import '../../../shared/widgets/menu_card.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/shared/widgets/menu_card.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -38,7 +36,8 @@ class _HomeState extends State<Home> {
           if (selectedProject.name!="(none)")
           MenuCard(
             cardSize: cardSize, 
-            title: "Translations"
+            title: S.of(context).menu_arb_management,
+            onPressed: ()=>tapMenu(context, '/arb_management'),
           ),
     
         ],

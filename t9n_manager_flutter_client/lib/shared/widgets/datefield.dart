@@ -3,8 +3,7 @@ import 'package:flutter_holo_date_picker/date_picker.dart';
 import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
 
 class Datefield extends StatefulWidget {
   const Datefield({ Key? key }) : super(key: key);

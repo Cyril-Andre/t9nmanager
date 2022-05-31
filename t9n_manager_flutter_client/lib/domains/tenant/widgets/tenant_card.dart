@@ -7,11 +7,11 @@ import 'package:t9n_manager_flutter_client/shared/widgets/confirm_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/input_dialog.dart';
 import 'package:t9n_manager_flutter_client/shared/widgets/spacer.dart';
 
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/app_state_notifier.dart';
-import '../../project/models/project.dart';
-import '../models/tenant.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
+import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 
 class TenantCard extends StatefulWidget {
   const TenantCard({Key? key, required this.tenant, required this.addNew, required this.refresh}) : super(key: key);

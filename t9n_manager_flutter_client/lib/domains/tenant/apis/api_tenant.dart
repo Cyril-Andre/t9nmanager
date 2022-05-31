@@ -1,13 +1,12 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/models/api_message.dart';
-import '../models/invitation.dart';
-import '../models/tenant.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/models/api_message.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/invitation.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 
 Future<List<Tenant>> getAllTenants(AppSettings appSettings, String jwt, BuildContext context) async {
   try {

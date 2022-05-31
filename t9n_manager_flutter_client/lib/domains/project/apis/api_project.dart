@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:t9n_manager_flutter_client/domains/project/models/create_project_request_model.dart';
 import 'package:t9n_manager_flutter_client/domains/project/models/project.dart';
 import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/models/api_message.dart';
-import '../../tenant/models/tenant.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/models/api_message.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
 
 Future<List<Project>> getAllProjects(AppSettings appSettings, String jwt, BuildContext context, Tenant tenant) async {
   try {

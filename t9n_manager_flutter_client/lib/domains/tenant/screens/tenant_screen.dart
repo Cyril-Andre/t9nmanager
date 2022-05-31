@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:t9n_manager_flutter_client/domains/tenant/apis/api_tenant.dart';
 import 'package:t9n_manager_flutter_client/shared/alert.dart';
 import 'package:t9n_manager_flutter_client/shared/app_state_notifier.dart';
-import '../../../generated/l10n.dart';
-import '../../../shared/app_settings.dart';
-import '../../../shared/models/api_exception.dart';
-import '../models/tenant.dart';
-import '../widgets/tenant_card.dart';
+import 'package:t9n_manager_flutter_client/generated/l10n.dart';
+import 'package:t9n_manager_flutter_client/shared/app_settings.dart';
+import 'package:t9n_manager_flutter_client/shared/models/api_exception.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/models/tenant.dart';
+import 'package:t9n_manager_flutter_client/domains/tenant/widgets/tenant_card.dart';
 
 class TenantScreen extends StatefulWidget {
   const TenantScreen({Key? key}) : super(key: key);
@@ -41,6 +41,7 @@ class _TenantScreenState extends State<TenantScreen> {
           } else if (snapshot.hasData) {
             return Scaffold(
               appBar: AppBar(
+                leading: const Icon(Icons.bookmark),
                 title: Text(S.of(context).title),
               ),
               body: getTenantCards(snapshot.requireData, crossAxisCount),
