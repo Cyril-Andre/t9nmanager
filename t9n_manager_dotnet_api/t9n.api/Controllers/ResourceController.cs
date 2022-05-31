@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using t9n.api.jsonConverter;
+using t9n.api.model;
 
 namespace t9n.api.Controllers
 {
@@ -80,7 +81,9 @@ namespace t9n.api.Controllers
             var options = new JsonSerializerOptions();
             options.Converters.Add( new ArbResourceCollectionJsonConverter() );
             ArbResourceCollection arbResourceCollection = JsonSerializer.Deserialize<ArbResourceCollection>( json, options );
-            return Ok();
+            return Ok(new ApiMessage(200,"File uploaded", "" ) { Value=arbResourceCollection});
         }
+
+      
     }
 }
