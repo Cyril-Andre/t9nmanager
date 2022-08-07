@@ -20,7 +20,7 @@ namespace Communication
             smtp.Host = "smtp.gmail.com";
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials=new NetworkCredential("kalangp@gmail.com","Ja30aejva1f");
+            smtp.Credentials=new NetworkCredential("kalangp@gmail.com","***REMOVED***");
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
             smtp.Send(mail);
