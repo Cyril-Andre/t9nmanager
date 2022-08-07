@@ -96,7 +96,7 @@ namespace t9n.api.Controllers
                 };
                 _dbContext.Tenants.Add(dbTenant);
                 user.Tenants.Add(dbTenant);
-              
+
                 _dbContext.SaveChanges();
                 ApiMessage result = new ApiMessage(httpStatus: 200, message: "Success", moreInfo: "") { Value = dbTenant.ToTenant() };
                 return Ok(result);
@@ -196,7 +196,7 @@ namespace t9n.api.Controllers
                     invit= new DbInvitation { TenantInternalId=tenantGuid, UserEmail=userEmail };
                     _dbContext.Invitations.Add(invit);
                     _dbContext.SaveChanges();
-                    CommunicationHelper.SendInvitationMail(userEmail, _appSettings.t9nManagerUrl, currentUser.Firstname, currentUser.Lastname, tenant.Name, _appSettings.TemplatesPath, locale: "en");
+                    CommunicationHelper.SendInvitationMail(userEmail, _appSettings.t9nManagerUrl, currentUser.Firstname, currentUser.Lastname, tenant.Name, _appSettings.TemplatesPath,_appSettings.SmtpUsername,_appSettings.SmtpPassword, locale: "en");
                     ApiMessage result = new ApiMessage(200, $"{userEmail} invited to tenant {tenant.Name}.");
                     result.Value = tenant.ToTenant();
                     return Ok(result);

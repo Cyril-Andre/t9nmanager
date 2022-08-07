@@ -10,7 +10,7 @@ namespace Communication
 {
     public static class CommunicationHelper
     {
-        public static void SendInvitationMail(string email, string t9nManagerUrl, string firstname, string lastname,string tenant, string templatePath, string locale = "en")
+        public static void SendInvitationMail(string email, string t9nManagerUrl, string firstname, string lastname,string tenant, string templatePath, string smtpUsername, string smtpPassword, string locale = "en")
         {
             List<TemplateParameter> parameters = new List<TemplateParameter>
             {
@@ -36,10 +36,10 @@ namespace Communication
                 }
             };
             string content = HtmlHelper.loadHtmlTemplate(templatePath, "emailinvitation", locale, parameters);
-            EmailHelper.SendEmail(email, "emailinvitation@genomemaster.com", $"{firstname} {lastname} invites you", content);
+            EmailHelper.SendEmail(email, "emailinvitation@genomemaster.com", $"{firstname} {lastname} invites you", content,smtpUsername, smtpPassword);
 
         }
-        public static void SendConfirmationMail(string email,string confirmationEmailUrl,  string templatePath, string locale="en")
+        public static void SendConfirmationMail(string email,string confirmationEmailUrl,  string templatePath,string smtpUsername, string smtpPassword, string locale="en")
         {
             List<TemplateParameter> parameters = new List<TemplateParameter>
             {
@@ -50,10 +50,10 @@ namespace Communication
                 }
             };
             string content = HtmlHelper.loadHtmlTemplate(templatePath, "emailconfirmation", locale, parameters);
-            EmailHelper.SendEmail(email,"emailconfirmation@genomemaster.com","Genome Master email confirmation",content);
+            EmailHelper.SendEmail(email,"emailconfirmation@genomemaster.com","Genome Master email confirmation",content, smtpUsername, smtpPassword);
         }
 
-        public static void SendResetPasswordMail(string email,string userName, string resetOTP, string templatePath, string locale = "en")
+        public static void SendResetPasswordMail(string email,string userName, string resetOTP, string templatePath,string smtpUsername,string smtpPassword, string locale = "en")
         {
             List<TemplateParameter> parameters = new List<TemplateParameter>
             {
@@ -68,7 +68,7 @@ namespace Communication
                 }
             };
             string content = HtmlHelper.loadHtmlTemplate(templatePath, "emailresetpassword", locale, parameters);
-            EmailHelper.SendEmail(email, "resetpassword@genomemaster.com","Genome Master - Reset Password", content);
+            EmailHelper.SendEmail(email, "resetpassword@genomemaster.com","Genome Master - Reset Password", content, smtpUsername, smtpPassword);
         }
     }
 }

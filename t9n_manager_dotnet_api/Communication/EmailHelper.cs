@@ -10,7 +10,7 @@ namespace Communication
 {
     public static class EmailHelper
     {
-        public static void SendEmail(string to, string from, string subject, string body)
+        public static void SendEmail(string to, string from, string subject, string body, string smtpUsername, string smtpPassword)
         {
             MailMessage mail = new MailMessage(from: from, to: to, subject: subject, body: body);
             mail.IsBodyHtml = true;
@@ -20,7 +20,7 @@ namespace Communication
             smtp.Host = "smtp.gmail.com";
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials=new NetworkCredential("kalangp@gmail.com","***REMOVED***");
+            smtp.Credentials=new NetworkCredential(smtpUsername,smtpPassword);
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
             smtp.Send(mail);

@@ -70,7 +70,7 @@ namespace t9n.api.Controllers
                     }
                 }
                 _dbContext.SaveChanges();
-                CommunicationHelper.SendConfirmationMail( userRegistrationModel.UserEmail, $"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.InternalId:D}", _appSettings.Value.TemplatesPath, "en" );
+                CommunicationHelper.SendConfirmationMail( userRegistrationModel.UserEmail, $"{_appSettings.Value.ConfirmationEmailUrl}?o={dbUser.InternalId:D}", _appSettings.Value.TemplatesPath,_appSettings.Value.SmtpUsername,_appSettings.Value.SmtpPassword, "en" );
                 return Ok( new ApiMessage( httpStatus: 200, message: $"User is registered with a {reason} password" ) );
             }
             catch ( Exception ex )
@@ -153,7 +153,7 @@ namespace t9n.api.Controllers
                 string otp = OtpProvider.GenerateOtp( 6, true );
                 user.ResetPasswordOtp = otp;
                 _dbContext.SaveChanges();
-                CommunicationHelper.SendResetPasswordMail( user.Email, user.UserName, otp, _appSettings.Value.TemplatesPath, "en" );
+                CommunicationHelper.SendResetPasswordMail( user.Email, user.UserName, otp, _appSettings.Value.TemplatesPath,_appSettings.Value.SmtpUsername, _appSettings.Value.SmtpPassword, "en" );
                 return Ok( new ApiMessage( httpStatus: 200, message: $"Reset password OTP sent" ) );
             }
             catch ( Exception ex )
